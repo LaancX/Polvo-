@@ -1,0 +1,45 @@
+version: "3.3"
+services:
+  adguardhome:
+    container_name: adguard
+    restart: unless-stopped
+    image: adguard/adguardhome:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+        #- "67:67/udp" - DHCP
+        #- "67:67/tcp" - DCHP
+        #- "68:68/udp" - DHCP
+      - "80:80/tcp"
+      - "443:443/tcp"
+      - "443:443/udp"
+      - "3000:3000/tcp" # Initial config
+      - "853:853/tcp" # DNS over TLS
+      - "784:784/udp" # DNS-over-QUIC
+      - "5443:5443/tcp" # DNScrypt
+      - "5443:5443/udp" # DNScrypt
+    volumes:
+      - /containers/adguard/work:/opt/adguardhome/work
+      - /containers/adguard/confdir:/opt/adguardhome/conf
+    networks:
+      dns-server:
+        ipv4_address: 172.20.0.10
+  
+  unbound:
+    container_name: unbound
+    restart: unless-stopped
+    image: mvance/unbound-rpi:latest
+    ports:
+      - "5053:53/tcp"
+      - "5053:53/udp"
+    volumes:
+      - /containers/unbound/a-records.conf:/opt/unbound/etc/unbound/a-records.conf:ro
+    networks:
+      dns-server:
+        ipv4_address: 172.20.0.20
+  
+networks:
+  dns-server:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
