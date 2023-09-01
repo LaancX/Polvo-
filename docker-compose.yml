@@ -1,0 +1,200 @@
+version: '3.5'
+services:
+  traefik:
+    image: "traefik:v2.10"
+    container_name: "traefik"
+    restart: unless-stopped
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      traefik:
+        ipv4_address: 172.18.0.10
+  uptime-kuma:
+    image: louislam/uptime-kuma:latest
+    container_name: uptime-kuma
+    volumes:
+      - /containers/uptime-kuma/data:/app/data
+    # ports:
+    #   - 3001:3001
+    restart: unless-stopped
+    networks:
+      - traefik
+    labels:
+      - 'traefik.enable=true'
+      - "traefik.http.routers.uptime-kuma.rule=Host(`uptime-kuma.home.me`)"
+      - "traefik.http.routers.uptime-kuma.entrypoints=web"
+      - "traefik.http.services.uptime-kuma.loadbalancer.server.port=3001"
+
+# Jellyfin - All the media and cool stuff
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    logging:
+      driver: json-file
+    user: 1000:1000
+    #network_mode: 'host' - proxied through traefik
+    volumes:
+      - /containers/jellyfin/config:/config
+      - /containers/jellyfin/cache:/cache
+      - /data/media:/data/media
+      - /data/media2:/data/media2:ro
+    restart: unless-stopped
+    # Optional - alternative address used for autodiscovery
+    environment:
+      - JELLYFIN_PublishedServerUrl=http://jellyfin.home.me
+    # Optional - may be necessary for docker healthcheck to pass if running in host network mode
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      traefik:
+        ipv4_address: 172.18.0.20
+    labels:
+      - 'traefik.enable=true'
+      - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.home.me`)"
+      - "traefik.http.routers.jellyfin.entrypoints=web"
+      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+
+# Bazarr - manages and downloads subtitles based on your requirements
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    logging:
+      driver: json-file
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Sao_Paulo
+    volumes:
+      - /containers/bazarr/config:/config
+      - /data/media:/data/media
+      - /etc/localtime:/etc/localtime:ro
+    # ports:
+    #   - 6767:6767
+    restart: unless-stopped
+    networks:
+      traefik:
+        ipv4_address: 172.18.0.30
+    labels:
+      - 'traefik.enable=true'
+      - "traefik.http.routers.bazarr.rule=Host(`bazarr.home.me`)"
+      - "traefik.http.routers.bazarr.entrypoints=web"
+      - "traefik.http.services.bazarr.loadbalancer.server.port=6767"
+
+# Sonarr - automatically download TV Shows via Usenet and BitTorrent
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    logging:
+      driver: json-file
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Sao_Paulo
+    volumes:
+      - /containers/sonarr/config:/config
+      - /data:/data
+      - /etc/localtime:/etc/localtime:ro
+        #- /path/to/downloadclient-downloads:/downloads #optional
+    # ports:
+    #   - 8989:8989
+    restart: unless-stopped
+    networks:
+      traefik:
+        ipv4_address: 172.18.0.40
+    labels:
+      - 'traefik.enable=true'
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.home.me`)"
+      - "traefik.http.routers.sonarr.entrypoints=web"
+      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
+
+# Radarr - automatically download movies via Usenet and BitTorrent
+  radarr:
+    container_name: radarr
+    image: cr.hotio.dev/hotio/radarr:latest
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    # ports:
+    #   - 7878:7878
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Sao_Paulo
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /containers/radarr/config:/config
+      - /data:/data
+    networks:
+      traefik:
+        ipv4_address: 172.18.0.50
+    labels:
+      - 'traefik.enable=true'
+      - "traefik.http.routers.radarr.rule=Host(`radarr.home.me`)"
+      - "traefik.http.routers.radarr.entrypoints=web"
+      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    logging:
+      driver: json-file
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Sao_Paulo
+    volumes:
+      - /containers/prowlarr/config:/config
+    # ports:
+    #   - 9696:9696
+    restart: unless-stopped
+    networks:
+      traefik:
+        ipv4_address: 172.18.0.60
+    labels:
+      - 'traefik.enable=true'
+      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.home.me`)"
+      - "traefik.http.routers.prowlarr.entrypoints=web"
+      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
+
+# Qbittorrent - we all know what it is
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    logging:
+      driver: json-file
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Sao_Paulo
+      - WEBUI_PORT=8080
+    volumes:
+      - /containers/qbittorrent/config:/config
+      - /data/torrents:/data/torrents
+    # ports:
+    #   - 9090:8080
+    #   - 6881:6881
+    #   - 6881:6881/udp
+    restart: unless-stopped
+    networks:
+      traefik:
+        ipv4_address: 172.18.0.70
+    labels:
+      - 'traefik.enable=true'
+      - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.home.me`)"
+      - "traefik.http.routers.qbittorrent.entrypoints=web"
+      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
+
+networks:
+  traefik:
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
