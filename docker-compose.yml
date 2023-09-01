@@ -18,6 +18,8 @@ services:
     networks:
       traefik:
         ipv4_address: 172.18.0.10
+
+# Uptime-kuma
   uptime-kuma:
     image: louislam/uptime-kuma:latest
     container_name: uptime-kuma
@@ -50,7 +52,7 @@ services:
     restart: unless-stopped
     # Optional - alternative address used for autodiscovery
     environment:
-      - JELLYFIN_PublishedServerUrl=http://jellyfin.home.me
+      - JELLYFIN_PublishedServerUrl=${JELLYFIN_PublishedServerUrl}
     # Optional - may be necessary for docker healthcheck to pass if running in host network mode
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -70,9 +72,9 @@ services:
     logging:
       driver: json-file
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Sao_Paulo
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
     volumes:
       - /containers/bazarr/config:/config
       - /data/media:/data/media
@@ -96,9 +98,9 @@ services:
     logging:
       driver: json-file
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Sao_Paulo
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
     volumes:
       - /containers/sonarr/config:/config
       - /data:/data
@@ -126,9 +128,9 @@ services:
     # ports:
     #   - 7878:7878
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Sao_Paulo
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /containers/radarr/config:/config
@@ -148,9 +150,9 @@ services:
     logging:
       driver: json-file
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Sao_Paulo
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
     volumes:
       - /containers/prowlarr/config:/config
     # ports:
@@ -172,10 +174,10 @@ services:
     logging:
       driver: json-file
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/Sao_Paulo
-      - WEBUI_PORT=8080
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - WEBUI_PORT=${WEBUI_PORT}
     volumes:
       - /containers/qbittorrent/config:/config
       - /data/torrents:/data/torrents
