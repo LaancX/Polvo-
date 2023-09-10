@@ -67,7 +67,7 @@ services:
     logging:
       driver: json-file
     user: 1000:1000
-    network_mode: 'host' #- proxied through traefik
+    # network_mode: 'host' #- proxied through traefik
     volumes:
       - /containers/jellyfin/config:/config
       - /containers/jellyfin/cache:/cache
