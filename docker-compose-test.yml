@@ -1,0 +1,19 @@
+version: '3.5'
+services:
+# Jellyfin - All the media and cool stuff
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    logging:
+      driver: json-file
+    user: 1000:1000
+    network_mode: 'host' #- proxied through traefik
+    volumes:
+      - /containers/jellyfin/config:/config
+      - /containers/jellyfin/cache:/cache
+      - /data/media:/data/media
+      - /data/media2:/data/media2:ro
+    restart: unless-stopped
+    # Optional - alternative address used for autodiscovery
+    environment:
+      - JELLYFIN_PublishedServerUrl=${JELLYFIN_PublishedServerUrl}

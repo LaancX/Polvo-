@@ -1,0 +1,26 @@
+api:
+  dashboard: true
+  debug: true
+entryPoints:
+  http:
+    address: ":80"
+  https:
+    address: ":443"
+ServersTransport:
+  insecureSkipVerify: true
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+  file:
+    filename: /config.yml
+certificatesResolvers:
+  namecheap:
+    acme:
+      email: rafaelbritomatos@gmail.com
+      storage: acme.json
+      dnsChallenge:
+        provider: namecheap
+        resolvers:
+          - "192.168.15.199:53"
+          - "1.0.0.1:53"
