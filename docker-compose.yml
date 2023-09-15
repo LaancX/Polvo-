@@ -209,7 +209,6 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
-      - WEBUI_PORT=${WEBUI_PORT}
     volumes:
       - /containers/qbittorrent/config:/config
       - /data/torrents:/data/torrents
