@@ -1,13 +1,28 @@
-# Meu Servidor Doméstico
-Bem-vindo ao meu Servidor Doméstico, o meu próprio playground digital! 🏠✨
+# Polvo-
 
-![Meu Servidor Doméstico](https://link_para_uma_imagem_bacana)
+<p align="center">
+  <b> Bem-vindo ao meu projeto de home server!  </b></br>
+  <sub> Navegando os mares, um dia de cada vez.
+  <sub>
+</p>
 
+<p align="center">
+  <a href="#Introdução"> 🧭 Introdução </a>&nbsp;|&nbsp;
+  <a href="#Serviços"> 🐳 Serviços </a>&nbsp;|&nbsp;
+  <a href="#Como usar"> 🤔 Como usar </a>&nbsp;|&nbsp;
+  <a href= "#Requisitos"> 📋Requisitos </a>&nbsp;|&nbsp;
+  <a href="#Instalação">🔧Instalação </a>&nbsp;&nbsp;
+</p>
+
+<a id="Introdução"></a>
 ## O que é este projeto?
 
-Este projeto é o ambiente de servidor doméstico que eu criei para atender a minha jornada de autodescobrimento. Aqui está um pouco do meu conhecimento que eu aprendi ao longo do tempo, bem como alguns erros e acertos que podem ser vistos de acordo com sua experiência na área. Se tiver alguma dica ou sugestão, pode deixar ai na parte de issues. Pull requests também são bem vindos.
+Este projeto é um ambiente de servidor doméstico que eu criei para atender a minha jornada de autodescobrimento. Aqui está um pouco do meu conhecimento que eu aprendi ao longo do tempo, bem como alguns erros e acertos que podem ser vistos de acordo com sua experiência na área. Se tiver alguma dica ou sugestão pode deixar aí na parte de issues. Pull requests também são bem vindos.
 
-Sinta-se a vontade de clonar o repositório e fazer do meu ambiente o seu próprio, afinal, tudo isso aqui é FOSS. :)
+Sinta-se a vontade para clonar o repositório e fazer do meu ambiente o seu próprio, afinal, tudo isso aqui é FOSS. :)
+
+<a id="Serviços"></a>
+## Serviços
 
 ### Traefik - Proxy reverso FTW
 ![Traefik Logo](https://link_para_o_logo_do_Traefik)
@@ -56,7 +71,7 @@ O Uptime-Kuma me mantem informado sobre o status de todos os meus contêineres.
 * Um painel de controle simples e eficaz
 
 Obs: esse carinha vai sair daqui e vai pra minha VPS, porque o intuito é mantê-lo no ar 24/7 com uma disponibilidade de pelo menos de 3 noves.
-saiba mais [aqui:](https://www.stratus.com/about/company-information/uptime-meter/#:~:text=Availability%20is%20normally%20expressed%20in,have%20on%20your%20server%20downtime.):
+saiba mais [aqui](https://www.stratus.com/about/company-information/uptime-meter/#:~:text=Availability%20is%20normally%20expressed%20in,have%20on%20your%20server%20downtime.)
 
 ### Bazarr - Gerenciamento de legendas
 ![Bazarr Logo](https://link_para_o_logo_do_Bazarr)
@@ -102,6 +117,13 @@ O qBittorrent é o gerenciador de torrents que todos amam e conhecem. (Não usem
 - Baixar torrents com facilidade
 - Acompanhar o progresso dos meus downloads
 
+<a id="Requisitos"></a>
+## Requisitos
+Você basicamente vai precisar de duas ferramentas:
+- [Docker](https://docs.docker.com/engine/install/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+<a id="Como Usar"></a>
 ## Como Usar
 Agora que você conheceu meus serviços, vamos a como você pode incorporar isso no seu ambiente. Deixarei os links abaixo para que você possa obter mais informações sobre cada serviço
 
@@ -116,8 +138,11 @@ Agora que você conheceu meus serviços, vamos a como você pode incorporar isso
 - [Doc - Prowlarr](https://wiki.servarr.com/prowlarr)
 - [Doc - qBittorrent](https://github.com/qbittorrent/qBittorrent/wiki/)
 
-## Divirta-se!
-Agora que você conhece meu servidor doméstico, aproveite para explorar, personalizar e otimizar seu próprio servidor doméstico. Se tiver alguma dúvida ou precisar de ajuda, sinta-se à vontade para abrir uma issue no GitHub.
+<a id="Instalação"></a>
+## Montando aí na sua casa
+Agora que você conhece meu, aproveite para explorar, personalizar e otimizar seu próprio servidor doméstico. 
+
+Se tiver alguma dúvida ou precisar de ajuda, sinta-se à vontade para abrir uma issue no GitHub.
 
 ### Obs
 Asteriscos (*) indicam partes ainda em construção
