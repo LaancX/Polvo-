@@ -2,9 +2,6 @@
   <img src="https://private-user-images.githubusercontent.com/26911224/268796495-731e6c49-ecc9-4058-b6c6-b03bb58903c4.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTEiLCJleHAiOjE2OTUwODAxNDQsIm5iZiI6MTY5NTA3OTg0NCwicGF0aCI6Ii8yNjkxMTIyNC8yNjg3OTY0OTUtNzMxZTZjNDktZWNjOS00MDU4LWI2YzYtYjAzYmI1ODkwM2M0LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFJV05KWUFYNENTVkVINTNBJTJGMjAyMzA5MTglMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjMwOTE4VDIzMzA0NFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWQ2NTU2ODAwNTI4MjBhYzAzYjMwYTEyOWYzOWZkMzZhNDY2MzY0NGY3NTRkMmNmOGFmM2JmY2NmNzQyMDM3YWUmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.vjmdRNT9UtSPd2lbBnJ1UF-XSEGBjG3dkgNq5CkqP-o" alt="Logo" width="200" height="200" />
 </p>
 
-<h1 align="center"> Readme </h1>" alt="Logo" width="200" height="200" />
-</p>
-
 <h1 align="center"> Polvo- </h1>
 
 <p align="center">
