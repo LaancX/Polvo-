@@ -14,7 +14,7 @@
   <a href="#Introdução"> 🧭 Introdução </a>&nbsp;|&nbsp;
   <a href="#Serviços"> 🐳 Serviços </a>&nbsp;|&nbsp;
   <a href="#Como usar"> 🤔 Como usar </a>&nbsp;|&nbsp;
-  <a href= "#Requisitos"> 📋Requisitos </a>&nbsp;|&nbsp;
+  <a href="#Requisitos"> 📋Requisitos </a>&nbsp;|&nbsp;
   <a href="#Instalação">🔧Instalação </a>&nbsp;&nbsp;
 </p>
 
@@ -29,7 +29,7 @@ Sinta-se a vontade para clonar o repositório e fazer do meu ambiente o seu pró
 ## Serviços
 
 ### Traefik - Proxy reverso FTW
-<img src="/Imagens/traefik.png" alt="Traefik" width="50" height="50" />
+<img src="/Imagens/traefik.png" alt="Traefik" width="50" height="70" />
 </br>
 O Traefik é a estrela do show! Ele atua proxy reverso no ambiente, direcionando o tráfego da Internet e também localmente - fora do host que hospeda os serviços - para os serviços corretos no meu servidor. Eis o que ele faz brilhantemente para mim:
 
