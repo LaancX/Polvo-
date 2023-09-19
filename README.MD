@@ -16,7 +16,8 @@
   <a href="#Como usar"> 🤔Como usar </a>&nbsp;|&nbsp;
   <a href="#Requisitos"> 📋Requisitos </a>&nbsp;|&nbsp;
   <a href="#Instalação">🔧Instalação </a>&nbsp;|&nbsp;
-  <a href="#Contribuição"> 🤝Contribuição </a>&nbsp;&nbsp;
+  <a href="#Contribuição"> 🤝Contribuição </a>&nbsp;|&nbsp;
+  <a href="#Roadmap"> 🗺️Roadmap </a>&nbsp;|&nbsp;
 </p>
 
 > Disclaimer: eu, a publicação, e os desenvolvedores das aplicações usadas ​​neste artigo não toleram ou incentivam o download, o compartilhamento, a propagação ou o peering de material protegido por direitos autorais. As leis nacionais e internacionais proíbem atividades ilegais. Este projeto serve apenas para fins educacionais
@@ -211,6 +212,15 @@ Se você tiver uma sugestão que possa melhorar isso, dá um fork no projeto e f
 3. Dá um commit (git commit -m 'Adicionado melhor feature de todas')
 4. Envia para a branch (git push origin feature/IdeiaNuncaAntesVista)
 5. Abra um pull request
+
+<a id="Roadmap"></a>
+## Roadmap
+
+[] Implementar SIEM na VPS (Wazuh)
+[] Configurar o WUD (What's Up Docker)
+[] Transferir configurações estáticas do traefik para o arquivo .toml ou .yml
+[] Implementar o certificado Let's Encrypt nas conexões via HTTPS
+[] Implementar VPN (Wireguard; ZeroTier; CloudFlare Tunnel)
 
 ### Obs
 Asteriscos (*) indicam partes ainda em construção
