@@ -7,23 +7,41 @@
 <p align="center">
   <b> Bem-vindo ao meu projeto de home server!  </b></br>
   <sub> Navegando os mares, um dia de cada vez.
-  <sub>
 </p>
 
 <p align="center">
-  <a href="#Introdução"> 🧭 Introdução </a>&nbsp;|&nbsp;
-  <a href="#Serviços"> 🐳 Serviços </a>&nbsp;|&nbsp;
-  <a href="#Como usar"> 🤔 Como usar </a>&nbsp;|&nbsp;
+  <a href="#Introdução"> 🧭Introdução </a>&nbsp;|&nbsp;
+  <a href="#Objetivo"> 🎯Objetivo </a>&nbsp;|&nbsp;
+  <a href="#Serviços"> 🐳Serviços </a>&nbsp;|&nbsp;
+  <a href="#Como usar"> 🤔Como usar </a>&nbsp;|&nbsp;
   <a href="#Requisitos"> 📋Requisitos </a>&nbsp;|&nbsp;
-  <a href="#Instalação">🔧Instalação </a>&nbsp;&nbsp;
+  <a href="#Instalação">🔧Instalação </a>&nbsp;|&nbsp;
+  <a href="#Contribuição"> 🤝Contribuição </a>&nbsp;&nbsp;
 </p>
+
+> Disclaimer: eu, a publicação, e os desenvolvedores das aplicações usadas ​​neste artigo não toleram ou incentivam o download, o compartilhamento, a propagação ou o peering de material protegido por direitos autorais. As leis nacionais e internacionais proíbem atividades ilegais. Este projeto serve apenas para fins educacionais
 
 <a id="Introdução"></a>
 ## O que é este projeto?
 
-Este projeto é um ambiente de servidor doméstico que eu criei para atender a minha jornada de autodescobrimento. Aqui está um pouco do meu conhecimento que eu aprendi ao longo do tempo, bem como alguns erros e acertos que podem ser vistos de acordo com sua experiência na área. Se tiver alguma dica ou sugestão pode deixar aí na parte de issues. Pull requests também são bem vindos.
+Este projeto é um ambiente de servidor doméstico que eu criei para atender a minha jornada de autodescobrimento. Aqui está um pouco do meu conhecimento que eu aprendi ao longo do tempo, bem como alguns erros e acertos que podem ser vistos de acordo com sua experiência na área. 
 
 Sinta-se a vontade para clonar o repositório e fazer do meu ambiente o seu próprio, afinal, tudo isso aqui é FOSS. :)
+
+Este projeto até o momento tende a ter uma estrutura baseada em contêineres.
+
+A estrutura aqui no github será dividida em pastas; a root sendo o meu servidor físico (o meu famoso macbook que chamo carinhosamente de crapbook que tem um ubuntu server instalado) e; um servidor VPS na OCI
+
+<a id="Objetivo"></a>
+## Objetivo
+
+O principal objetivo com esse projeto é descobrir novas tecnologias e jeitos de incorporar softwares geralmente inalcançáveis em algo tangível e simples. 
+
+Ué, como assim?
+
+Muitas das tecnologias que usamos diariamente são encontradas apenas em grandes empresas, com códigos fechados e com uma política restritiva. 
+
+Levando em consideração a filosofia do próprio linux, eu como um relês profissional da área de segurança da informação não acredito que as coisas deveriam ter essa política agressiva para com os usuários, e portanto, busco de certa forma implementar as mesmas coisas de grandes empresas no meu próprio ambiente, utilizando meus recursos e perpetuando a transparência como acredito que as coisas deveriam ser.
 
 <a id="Serviços"></a>
 ## Serviços
@@ -32,52 +50,57 @@ Sinta-se a vontade para clonar o repositório e fazer do meu ambiente o seu pró
 <img src="/Imagens/traefik.png" alt="Traefik" width="50" height="60" />
 </br>
 
-O Traefik é a estrela do show! Ele atua proxy reverso no ambiente, direcionando o tráfego da Internet e também localmente - fora do host que hospeda os serviços - para os serviços corretos no meu servidor. Eis o que ele faz brilhantemente para mim:
+O Traefik é a porta de entrada. Ele atua proxy reverso no ambiente, direcionando o tráfego da Internet e também localmente - fora do host que hospeda os serviços - para os serviços corretos no meu servidor. Eis o que ele basicamente faz:
 
 * Roteamento dinâmico de tráfego para diferentes serviços
 * Suporte a HTTPS com Let's Encrypt para segurança aprimorada*
 * Um painel de controle amigável para gerenciar minhas configurações
 
+A configuração do Traefik a princípio é algo um pouco complexo, ainda mais quando é sua primeira implementação do serviço. Depois de um tempo ele começa a se tornar muito simples, com cada serviço que é adicionado no arquivo de docker-compose basta adicionar labels para que haja a integração com o proxy.
+
 ### What's up, Docker? - Monitoramento automatizado
 <img src="/Imagens/wud.png" alt="WUD" width="50" height="50" />
 </br>
 
-O "What's Up Docker?" é como meu assistente pessoal digital que monitora meus contêineres Docker em tempo real. Com ele, posso:
+O "What's Up Docker?" é como meu assistente pessoal digital que monitora meus contêineres em tempo real. Aqui estão algumas funções:
 
 * Receber atualizações instantâneas sobre meus contêineres
-* Verificar o status de todos os meus aplicativos com facilidade
+* Verificar o status dos contêineres
 * Realizar ações de manutenção diretamente do meu navegador
-* Além de atualizar os contêineres de modo automático*
+* Atualização automática dos contêineres*
 
-### Jellyfin - A minha Central de mídia
+### Jellyfin - Minha central de mídia
 <img src="/Imagens/jellyfin.png" alt="" width="50" height="50" />
 </br>
 
-O Jellyfin é a resposta para todas as minhas necessidades de mídia. Ele é o centro onde gerencio e reproduzo meus filmes e programas de TV:
+O Jellyfin é a resposta para todas as minhas necessidades de mídia. Ele é a aplicação que gerencio e reproduzo meus filmes e programas de TV:
 
 * Organizar minha biblioteca de mídia
 * Transmitir conteúdo para todos os meus dispositivos na rede local
-* Acessar minhas mídias remotamente
 
-### Jellyseerr - Gerenciando Solicitações de Mídia
+O Jellyfin é uma alternativa bem forte frente aos serviços como o Plex ou Emby.
+
+Se quiser um comparativo mais aprofundado, sugiro esse [repo](https://github.com/Protektor-Desura/Archon/wiki/Compare-Media-Servers) aqui.
+
+### Jellyseerr - Gerenciamento de solicitações de mídia
 <img src="/Imagens/jellyseerr.png" alt="" width="50" height="50" />
 </br>
 
-O Jellyseerr é meu assistente dedicado ao Jellyfin, ajudando-me a gerenciar as solicitações da minha biblioteca de mídia:
+O Jellyseerr é meu assistente dedicado ao Jellyfin, me ajudando a gerenciar as solicitações da minha biblioteca de mídia:
 
 * Aceitar, processar e gerenciar solicitações de mídia
 * Garantir que meus amigos e familiares obtenham o que desejam
 * Simplificar a organização da minha biblioteca
 
-### Uptime-Kuma - Jogando Ping Pong com os contêineres
+### Uptime-Kuma - Monitoramento da disponibilidade dos contêineres
 <img src="/Imagens/uptime-kuma.png" alt="" width="50" height="50" />
 </br>
 
-O Uptime-Kuma me mantem informado sobre o status de todos os meus contêineres. 
+O Uptime-Kuma me mantem informado sobre o status de todos os meus contêineres. Ele basicamente:
 
-* Receber alertas instantâneos sobre quedas de serviço
-* Manter-me no controle dos meus aplicativos 24/7
-* Um painel de controle simples e eficaz
+* Mandar alertas instantâneos sobre quedas de serviço
+* Me manter no controle dos meus aplicativos 24/7
+* Tem um painel de controle simples e eficaz
 
 Obs: esse carinha vai sair daqui e vai pra minha VPS, porque o intuito é mantê-lo no ar 24/7 com uma disponibilidade de pelo menos de 3 noves.
 saiba mais [aqui](https://www.stratus.com/about/company-information/uptime-meter/#:~:text=Availability%20is%20normally%20expressed%20in,have%20on%20your%20server%20downtime.)
@@ -106,13 +129,13 @@ O Sonarr cuida das séries de TV para mim. É como ter um assistente pessoal par
 <img src="/Imagens/radarr.png" alt="" width="50" height="50" />
 </br>
 
-O Radarr é o complemento perfeito para o Sonarr, mas para filmes.
+O Radarr é igual ao sonarr, porém para filmes.
 
 - Fazer o download automático de filmes
 - Configuração fácil com Usenet e torrent
 - Organizar minha biblioteca de filmes automaticamente
 
-### Prowlarr - Indexadores para serviços Arrs
+### Prowlarr - Indexadores para os serviços Arrs
 <img src="/Imagens/prowlarr.png" alt="" width="50" height="50" />
 </br>
 
@@ -152,11 +175,43 @@ Agora que você conheceu meus serviços, vamos a como você pode incorporar isso
 - [Doc - Prowlarr](https://wiki.servarr.com/prowlarr)
 - [Doc - qBittorrent](https://github.com/qbittorrent/qBittorrent/wiki/)
 
+
+
 <a id="Instalação"></a>
 ## Montando aí na sua casa
 Agora que você conhece meu, aproveite para explorar, personalizar e otimizar seu próprio servidor doméstico. 
 
+Aqui estão os passos básicos para colocar os serviços e o servidor no ar:
+
+1. Clonar o repositório
+  ```git clone https://github.com/LaancX/Polvo-.git```
+</br>
+2. Organizar a estrutura de pastas no host do docker
+Após a instalação do docker e o docker-compose, você vai precisar organizar a estrutura de pastas que os serviços utilizarão. Para isso, há um tutorial detalhado de como fazer para evitar problemas no ambiente, que pode ser acessado [aqui](https://trash-guides.info/Hardlinks/How-to-setup-for/Docker/)</br>
+No meu compose são dois diretórios que eu utilizo na root do meu sistema:
+    - /containers
+    - /data
+</br>
+3. Subir os contêineres
+Após a organização das pastas você terá que executar um comando somente: 
+  ```docker-compose up -d```
+</br>
+4. Após isso entra a parte de configurações. Há varios guias de como fazer isso no youtube e na internet, portanto, não serei redundante.
+
 Se tiver alguma dúvida ou precisar de ajuda, sinta-se à vontade para abrir uma issue no GitHub.
+
+<a id="Contribuição"></a>
+## Quero contribuir
+
+As contribuições são o que tornam a comunidade de código aberto um lugar incrível para aprender, inspirar e criar. Qualquer contribuição que você fizer será muito apreciada.
+
+Se você tiver uma sugestão que possa melhorar isso, dá um fork no projeto e faça um pull request. Você também pode simplesmente fazer na parte de "issue" com a tag “aprimoramento”. Não se esqueça de dar uma estrela ao projeto! Obrigado novamente!
+
+1. Fork
+2. Crie sua branch de aprimoramento (git checkout -b feature/IdeiaNuncaAntesVista)
+3. Dá um commit (git commit -m 'Adicionado melhor feature de todas')
+4. Envia para a branch (git push origin feature/IdeiaNuncaAntesVista)
+5. Abra um pull request
 
 ### Obs
 Asteriscos (*) indicam partes ainda em construção
