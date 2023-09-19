@@ -187,9 +187,9 @@ Aqui estão os passos básicos para colocar os serviços e o servidor no ar:
 2. Organizar a estrutura de pastas no host do docker
 Após a instalação do docker e o docker-compose, você vai precisar organizar a estrutura de pastas que os serviços utilizarão. Para isso, há um tutorial detalhado de como fazer para evitar problemas no ambiente, que pode ser acessado [aqui](https://trash-guides.info/Hardlinks/How-to-setup-for/Docker/)</br>
 
-No meu compose são dois diretórios que eu utilizo na root do meu sistema:
-  - /containers
-  - /data
+  No meu compose são dois diretórios que eu utilizo na root do meu sistema:
+    - /containers
+    - /data
 
 3. Subir os contêineres
 Após a organização das pastas você terá que executar um comando somente: 
