@@ -221,6 +221,7 @@ Se você tiver uma sugestão que possa melhorar isso, dá um fork no projeto e f
 * [ ] Transferir configurações estáticas do traefik para o arquivo .toml ou .yml
 * [ ] Implementar o certificado Let's Encrypt nas conexões via HTTPS
 * [ ] Implementar VPN (Wireguard; ZeroTier; CloudFlare Tunnel)
+* [ ] Migrar para um ambiente de Kubernetes (k3s; minikube)
 
 ### Obs
 Asteriscos (*) indicam partes ainda em construção
