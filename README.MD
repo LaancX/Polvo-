@@ -31,6 +31,7 @@ Sinta-se a vontade para clonar o repositório e fazer do meu ambiente o seu pró
 ### Traefik - Proxy reverso FTW
 <img src="/Imagens/traefik.png" alt="Traefik" width="50" height="60" />
 </br>
+
 O Traefik é a estrela do show! Ele atua proxy reverso no ambiente, direcionando o tráfego da Internet e também localmente - fora do host que hospeda os serviços - para os serviços corretos no meu servidor. Eis o que ele faz brilhantemente para mim:
 
 * Roteamento dinâmico de tráfego para diferentes serviços
@@ -40,6 +41,7 @@ O Traefik é a estrela do show! Ele atua proxy reverso no ambiente, direcionando
 ### What's up, Docker? - Monitoramento automatizado
 <img src="/Imagens/wud.png" alt="WUD" width="50" height="50" />
 </br>
+
 O "What's Up Docker?" é como meu assistente pessoal digital que monitora meus contêineres Docker em tempo real. Com ele, posso:
 
 * Receber atualizações instantâneas sobre meus contêineres
@@ -50,6 +52,7 @@ O "What's Up Docker?" é como meu assistente pessoal digital que monitora meus c
 ### Jellyfin - A minha Central de mídia
 <img src="/Imagens/jellyfin.png" alt="" width="50" height="50" />
 </br>
+
 O Jellyfin é a resposta para todas as minhas necessidades de mídia. Ele é o centro onde gerencio e reproduzo meus filmes e programas de TV:
 
 * Organizar minha biblioteca de mídia
@@ -59,6 +62,7 @@ O Jellyfin é a resposta para todas as minhas necessidades de mídia. Ele é o c
 ### Jellyseerr - Gerenciando Solicitações de Mídia
 <img src="/Imagens/jellyseerr.png" alt="" width="50" height="50" />
 </br>
+
 O Jellyseerr é meu assistente dedicado ao Jellyfin, ajudando-me a gerenciar as solicitações da minha biblioteca de mídia:
 
 * Aceitar, processar e gerenciar solicitações de mídia
