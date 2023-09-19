@@ -16,7 +16,7 @@
   <a href="#Como usar"> 🤔Como usar </a>&nbsp;|&nbsp;
   <a href="#Requisitos"> 📋Requisitos </a>&nbsp;|&nbsp;
   <a href="#Instalação">🔧Instalação </a>&nbsp;|&nbsp;
-  <a href="#Contribuição"> 🤝Contribuição </a>&nbsp;|&nbsp;
+  <a href="#Contribuição"> 🤝Contribuição </a>&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#Roadmap"> 🗺️Roadmap </a>&nbsp;|&nbsp;
 </p>
 
