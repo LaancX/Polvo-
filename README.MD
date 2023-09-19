@@ -20,7 +20,7 @@
   <a href="#Roadmap"> 🗺️Roadmap </a>&nbsp;|&nbsp;
 </p>
 
-> Disclaimer: eu, a publicação, e os desenvolvedores das aplicações usadas ​​neste artigo não toleram ou incentivam o download, o compartilhamento, a propagação ou o peering de material protegido por direitos autorais. As leis nacionais e internacionais proíbem atividades ilegais. Este projeto serve apenas para fins educacionais
+> Disclaimer: eu, bem como os desenvolvedores das aplicações usadas ​​neste artigo não toleram ou incentivam o download, o compartilhamento, a propagação ou o peering de material protegido por direitos autorais. As leis nacionais e internacionais proíbem atividades ilegais. Este projeto serve apenas para fins educacionais
 
 <a id="Introdução"></a>
 ## O que é este projeto?
