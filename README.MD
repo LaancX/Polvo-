@@ -26,11 +26,11 @@
 
 Este projeto é um ambiente de servidor doméstico que eu criei para atender a minha jornada de autodescobrimento. Aqui está um pouco do meu conhecimento que eu aprendi ao longo do tempo, bem como alguns erros e acertos que podem ser vistos de acordo com sua experiência na área. 
 
-Sinta-se a vontade para clonar o repositório e fazer do meu ambiente o seu próprio, afinal, tudo isso aqui é FOSS. :)
+Sinta-se à vontade para clonar o repositório e fazer do meu ambiente o seu próprio, afinal, tudo isso aqui é FOSS. :)
 
 Este projeto até o momento tende a ter uma estrutura baseada em contêineres.
 
-A estrutura aqui no github será dividida em pastas; a root sendo o meu servidor físico (o meu famoso macbook que chamo carinhosamente de crapbook que tem um ubuntu server instalado) e; um servidor VPS na OCI
+A estrutura aqui no github será dividida em pastas; a root sendo o meu servidor físico (o meu famoso macbook que chamo carinhosamente de crapbook, com um ubuntu server instalado) e; um servidor VPS na OCI
 
 <a id="Objetivo"></a>
 ## Objetivo
@@ -41,7 +41,7 @@ Ué, como assim?
 
 Muitas das tecnologias que usamos diariamente são encontradas apenas em grandes empresas, com códigos fechados e com uma política restritiva. 
 
-Levando em consideração a filosofia do próprio linux, eu como um relês profissional da área de segurança da informação não acredito que as coisas deveriam ter essa política agressiva para com os usuários, e portanto, busco de certa forma implementar as mesmas coisas de grandes empresas no meu próprio ambiente, utilizando meus recursos e perpetuando a transparência como acredito que as coisas deveriam ser.
+Levando em consideração a filosofia do próprio linux, eu como um relês profissional da área de segurança da informação não acredito que as coisas deveriam ter essa política agressiva para com os usuários, e, portanto, busco de certa forma implementar as mesmas coisas de grandes empresas no meu próprio ambiente, utilizando meus recursos e perpetuando a transparência como acredito que as coisas deveriam ser.
 
 <a id="Serviços"></a>
 ## Serviços
@@ -50,7 +50,7 @@ Levando em consideração a filosofia do próprio linux, eu como um relês profi
 <img src="/Imagens/traefik.png" alt="Traefik" width="50" height="60" />
 </br>
 
-O Traefik é a porta de entrada. Ele atua proxy reverso no ambiente, direcionando o tráfego da Internet e também localmente - fora do host que hospeda os serviços - para os serviços corretos no meu servidor. Eis o que ele basicamente faz:
+O Traefik é a porta de entrada. Ele atua proxy reverso no ambiente, direcionando o tráfego remoto e local para os serviços corretos no meu servidor. Eis o que ele basicamente faz:
 
 * Roteamento dinâmico de tráfego para diferentes serviços
 * Suporte a HTTPS com Let's Encrypt para segurança aprimorada*
@@ -102,7 +102,7 @@ O Uptime-Kuma me mantem informado sobre o status de todos os meus contêineres. 
 * Me manter no controle dos meus aplicativos 24/7
 * Tem um painel de controle simples e eficaz
 
-Obs: esse carinha vai sair daqui e vai pra minha VPS, porque o intuito é mantê-lo no ar 24/7 com uma disponibilidade de pelo menos de 3 noves.
+Obs: esse carinha vai sair daqui e vai para minha VPS, porque o intuito é mantê-lo no ar 24/7 com uma disponibilidade de pelo menos de 3 noves.
 saiba mais [aqui](https://www.stratus.com/about/company-information/uptime-meter/#:~:text=Availability%20is%20normally%20expressed%20in,have%20on%20your%20server%20downtime.)
 
 ### Bazarr - Gerenciamento de legendas
@@ -162,7 +162,7 @@ Você basicamente vai precisar de duas ferramentas:
 
 <a id="Como Usar"></a>
 ## Como Usar
-Agora que você conheceu meus serviços, vamos a como você pode incorporar isso no seu ambiente. Deixarei os links abaixo para que você possa obter mais informações sobre cada serviço
+Vamos ver como você pode incorporar isso no seu ambiente. Deixarei os links abaixo para que você possa obter mais informações sobre cada serviço
 
 - [Doc - Traefik](https://doc.traefik.io/traefik/)
 - [Doc - What's Up Docker?](https://fmartinou.github.io/whats-up-docker/#/)
@@ -175,11 +175,9 @@ Agora que você conheceu meus serviços, vamos a como você pode incorporar isso
 - [Doc - Prowlarr](https://wiki.servarr.com/prowlarr)
 - [Doc - qBittorrent](https://github.com/qbittorrent/qBittorrent/wiki/)
 
-
-
 <a id="Instalação"></a>
 ## Montando aí na sua casa
-Agora que você conhece meu, aproveite para explorar, personalizar e otimizar seu próprio servidor doméstico. 
+Agora que você já conhece meu servidor aproveite para explorar, personalizar e otimizar o seu próprio! 
 
 Aqui estão os passos básicos para colocar os serviços e o servidor no ar:
 
@@ -196,8 +194,8 @@ No meu compose são dois diretórios que eu utilizo na root do meu sistema:
 3. Subir os contêineres
 Após a organização das pastas você terá que executar um comando somente: 
   ```docker-compose up -d```
-  
-4. Após isso entra a parte de configurações. Há varios guias de como fazer isso no youtube e na internet, portanto, não serei redundante.
+
+4. Após isso entra a parte de configurações. Há vários guias de como fazer isso no youtube e na internet, portanto, não serei redundante.
 
 Se tiver alguma dúvida ou precisar de ajuda, sinta-se à vontade para abrir uma issue no GitHub.
 
