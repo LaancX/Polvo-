@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="/Imagens/logo-polvo-.png" alt="Logo" width="200" height="200" />
+  <img src="/Imagens/logo-polvo-.png" alt="Logo" width="300" height="300" />
 </p>
 
 <h1 align="center"> Polvo- </h1>
@@ -29,8 +29,8 @@ Sinta-se a vontade para clonar o repositório e fazer do meu ambiente o seu pró
 ## Serviços
 
 ### Traefik - Proxy reverso FTW
-![Traefik Logo](/Imagens/traefik.png)
-
+<img src="/Imagens/traefik.png" alt="Traefik" width="50" height="50" />
+</br>
 O Traefik é a estrela do show! Ele atua proxy reverso no ambiente, direcionando o tráfego da Internet e também localmente - fora do host que hospeda os serviços - para os serviços corretos no meu servidor. Eis o que ele faz brilhantemente para mim:
 
 * Roteamento dinâmico de tráfego para diferentes serviços
@@ -38,8 +38,8 @@ O Traefik é a estrela do show! Ele atua proxy reverso no ambiente, direcionando
 * Um painel de controle amigável para gerenciar minhas configurações
 
 ### What's up, Docker? - Monitoramento automatizado
-![What's Up Docker Logo](/Imagens/wud.png)
-
+<img src="/Imagens/wud.png" alt="WUD" width="50" height="50" />
+</br>
 O "What's Up Docker?" é como meu assistente pessoal digital que monitora meus contêineres Docker em tempo real. Com ele, posso:
 
 * Receber atualizações instantâneas sobre meus contêineres
@@ -48,8 +48,8 @@ O "What's Up Docker?" é como meu assistente pessoal digital que monitora meus c
 * Além de atualizar os contêineres de modo automático*
 
 ### Jellyfin - A minha Central de mídia
-![Jellyfin Logo](/Imagens/jellyfin.png)
-
+<img src="/Imagens/jellyfin.png" alt="" width="50" height="50" />
+</br>
 O Jellyfin é a resposta para todas as minhas necessidades de mídia. Ele é o centro onde gerencio e reproduzo meus filmes e programas de TV:
 
 * Organizar minha biblioteca de mídia
@@ -57,8 +57,8 @@ O Jellyfin é a resposta para todas as minhas necessidades de mídia. Ele é o c
 * Acessar minhas mídias remotamente
 
 ### Jellyseerr - Gerenciando Solicitações de Mídia
-![Jellyseerr Logo](/Imagens/jellyseerr.png)
-
+<img src="/Imagens/jellyseerr.png" alt="" width="50" height="50" />
+</br>
 O Jellyseerr é meu assistente dedicado ao Jellyfin, ajudando-me a gerenciar as solicitações da minha biblioteca de mídia:
 
 * Aceitar, processar e gerenciar solicitações de mídia
@@ -66,7 +66,8 @@ O Jellyseerr é meu assistente dedicado ao Jellyfin, ajudando-me a gerenciar as 
 * Simplificar a organização da minha biblioteca
 
 ### Uptime-Kuma - Jogando Ping Pong com os contêineres
-![Uptime-Kuma Logo](/Imagens/uptime-kuma.png)
+<img src="/Imagens/uptime-kuma.png" alt="" width="50" height="50" />
+</br>
 
 O Uptime-Kuma me mantem informado sobre o status de todos os meus contêineres. 
 
@@ -78,7 +79,8 @@ Obs: esse carinha vai sair daqui e vai pra minha VPS, porque o intuito é mantê
 saiba mais [aqui](https://www.stratus.com/about/company-information/uptime-meter/#:~:text=Availability%20is%20normally%20expressed%20in,have%20on%20your%20server%20downtime.)
 
 ### Bazarr - Gerenciamento de legendas
-![Bazarr Logo](/Imagens/bazarr.png)
+<img src="/Imagens/bazarr.png" alt="" width="50" height="50" />
+</br>
 
 O Bazarr facilita minha vida quando se trata de legendas para meus filmes e programas de TV:
 
@@ -87,7 +89,8 @@ O Bazarr facilita minha vida quando se trata de legendas para meus filmes e prog
 * Manter minhas legendas em ordem
 
 ### Sonarr - Downloads automáticos de séries
-![Sonarr Logo](/Imagens/sonarr.png)
+<img src="/Imagens/sonarr.png" alt="" width="50" height="50" />
+</br>
 
 O Sonarr cuida das séries de TV para mim. É como ter um assistente pessoal para downloads:
 
@@ -96,7 +99,8 @@ O Sonarr cuida das séries de TV para mim. É como ter um assistente pessoal par
 - Organização automática das minhas séries
 
 ### Radarr - Downloads automáticos de filmes
-![Radarr Logo](/Imagens/sonarr.png)
+<img src="/Imagens/radarr.png" alt="" width="50" height="50" />
+</br>
 
 O Radarr é o complemento perfeito para o Sonarr, mas para filmes.
 
@@ -105,7 +109,8 @@ O Radarr é o complemento perfeito para o Sonarr, mas para filmes.
 - Organizar minha biblioteca de filmes automaticamente
 
 ### Prowlarr - Indexadores para serviços Arrs
-![Prowlarr Logo](/Imagens/prowlarr.png)
+<img src="/Imagens/prowlarr.png" alt="" width="50" height="50" />
+</br>
 
 O Prowlarr é o administrador de indexadores que garante que os serviços Arrs tenham o que precisam:
 
@@ -114,7 +119,8 @@ O Prowlarr é o administrador de indexadores que garante que os serviços Arrs t
 - Gerenciamento simplificado de fontes
 
 ### qBittorrent - The one and only
-![qBittorrent Logo](/Imagens/qbittorrent.png)
+<img src="/Imagens/qbittorrent.png" alt="" width="50" height="50" />
+</br>
 
 O qBittorrent é o gerenciador de torrents que todos amam e conhecem. (Não usem uTorrent, por favor).
 
