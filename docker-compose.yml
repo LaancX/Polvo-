@@ -47,10 +47,10 @@ services:
     user: 1000:1000
     # network_mode: 'host' #- proxied through traefik
     volumes:
-      - /containers/jellyfin/config:/config
-      - /containers/jellyfin/cache:/cache
-      - /data/media:/data/media
-      - /data/media2:/data/media2:ro
+      - ${CONTAINER_PATH}/jellyfin/config:/config
+      - ${CONTAINER_PATH}/jellyfin/cache:/cache
+      - ${DATA_PATH}/media:/data/media
+      - ${DATA_PATH}/media2:/data/media2:ro
     restart: unless-stopped
     # Optional - alternative address used for autodiscovery
     environment:
@@ -73,7 +73,7 @@ services:
     # ports:
     # - 5055:5055
     volumes:
-      - /containers/jellyseerr/config:/app/config
+      - ${CONTAINER_PATH}/jellyseerr/config:/app/config
     restart: unless-stopped
     networks:
       - traefik
@@ -88,7 +88,7 @@ services:
     image: louislam/uptime-kuma:latest
     container_name: uptime-kuma
     volumes:
-      - /containers/uptime-kuma/data:/app/data
+      - ${CONTAINER_PATH}/uptime-kuma/data:/app/data
     # ports:
     #   - 3001:3001
     restart: unless-stopped
@@ -111,8 +111,8 @@ services:
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
-      - /containers/bazarr/config:/config
-      - /data/media:/data/media
+      - ${CONTAINER_PATH}/bazarr/config:/config
+      - ${DATA_PATH}/media:/data/media
       - /etc/localtime:/etc/localtime:ro
     # ports:
     #   - 6767:6767
@@ -136,8 +136,8 @@ services:
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
-      - /containers/sonarr/config:/config
-      - /data:/data
+      - ${CONTAINER_PATH}/sonarr/config:/config
+      - ${DATA_PATH}:/data
       - /etc/localtime:/etc/localtime:ro
         #- /path/to/downloadclient-downloads:/downloads #optional
     # ports:
@@ -166,8 +166,8 @@ services:
       - TZ=${TZ}
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /containers/radarr/config:/config
-      - /data:/data
+      - ${CONTAINER_PATH}/radarr/config:/config
+      - ${DATA_PATH}:/data
     networks:
       - traefik
     labels:
@@ -187,7 +187,7 @@ services:
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
-      - /containers/prowlarr/config:/config
+      - ${CONTAINER_PATH}/prowlarr/config:/config
     # ports:
     #   - 9696:9696
     restart: unless-stopped
@@ -210,8 +210,8 @@ services:
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
-      - /containers/qbittorrent/config:/config
-      - /data/torrents:/data/torrents
+      - ${CONTAINER_PATH}/qbittorrent/config:/config
+      - ${DATA_PATH}/torrents:/data/torrents
     # ports:
     #   - 9090:8080
     #   - 6881:6881
@@ -258,7 +258,7 @@ networks:
 #       - AUTO_UPDATE=true #optional
 #       # - RUN_OPTS=true #optional
 #     volumes:
-#       - /containers/jackett/data:/config
+#       - ${CONTAINER_PATH}/jackett/data:/config
 #       - /data/torrents:/downloads
 #     # ports:
 #     #   # - 9117:9117
