@@ -2,7 +2,6 @@ version: '3.5'
 services:
 # Traefik - Reverse proxy FTW
   traefik:
-    user: ${USER}
     image: "traefik:v2.10"
     container_name: "traefik"
     restart: unless-stopped
@@ -39,9 +38,29 @@ services:
     networks:
       - traefik
 
+# HomePage - Dashboard
+  homepage:
+    image: ghcr.io/benphelps/homepage:latest
+    container_name: homepage
+    environment:
+      PUID: 1000
+      GUID: 1000
+    # ports:
+    #   - 3000:3000
+    volumes:
+      - ${CONTAINER_PATH}/homepage/config:/app/config 
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: unless-stopped
+    labels:
+      - 'traefik.enable=true'
+      - "traefik.http.routers.homepage.rule=Host(`homepage.${DOMAIN}`)" # && PathPrefix(`/homepage`)"
+      - "traefik.http.routers.homepage.entrypoints=web"
+      - "traefik.http.services.homepage.loadbalancer.server.port=3000"
+    networks:
+      - traefik
+
 # Jellyfin - All the media and cool stuff
   jellyfin:
-    user: ${USER}
     image: jellyfin/jellyfin
     container_name: jellyfin
     logging:
@@ -55,7 +74,8 @@ services:
     restart: unless-stopped
     # Optional - alternative address used for autodiscovery
     environment:
-      - JELLYFIN_PublishedServerUrl=${DOMAIN} # Altere para o seu domínio. Pode ser um IP também
+      PUID: 1000
+      GUID: 1000
     networks:
       - traefik
     labels:
@@ -66,7 +86,6 @@ services:
 
 #Jellyseerr - Manages requests for the media library
   jellyseerr:
-    user: ${USER}
     image: fallenbagel/jellyseerr:latest
     container_name: jellyseerr
     environment:
@@ -87,7 +106,6 @@ services:
 
 # Uptime-kuma - Playing ping pong with all the cool containers
   uptime-kuma:
-    user: ${USER}
     image: louislam/uptime-kuma:latest
     container_name: uptime-kuma
     volumes:
@@ -105,12 +123,13 @@ services:
 
 # Bazarr - Manages and downloads subtitles based on my requirements
   bazarr:
-    user: ${USER}
     image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr
     logging:
       driver: json-file
     environment:
+      - PUID=1000
+      - PGID=1000
       - TZ=${TZ}
     volumes:
       - ${CONTAINER_PATH}/bazarr/config:/config
@@ -129,18 +148,19 @@ services:
 
 # Sonarr - Automatically download TV Shows via Usenet and the qBittorrent
   sonarr:
-    user: ${USER}
+    # user: ${USER}
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
     logging:
       driver: json-file
     environment:
+      - PUID=1000
+      - GUID=1000
       - TZ=${TZ}
     volumes:
       - ${CONTAINER_PATH}/sonarr/config:/config
       - ${DATA_PATH}:/data
       - /etc/localtime:/etc/localtime:ro
-        #- /path/to/downloadclient-downloads:/downloads #optional
     # ports:
     #   - 8989:8989
     restart: unless-stopped
@@ -154,7 +174,6 @@ services:
 
 # Radarr - Automatically download movies via Usenet and the qBittorrent
   radarr:
-    user: ${USER}
     container_name: radarr
     image: cr.hotio.dev/hotio/radarr:latest
     restart: unless-stopped
@@ -163,6 +182,8 @@ services:
     # ports:
     #   - 7878:7878
     environment:
+      - PUID=1000
+      - GUID=1000
       - TZ=${TZ}
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -178,12 +199,13 @@ services:
 
 # Prowlarr - Gives the indexers to the arrs services
   prowlarr:
-    user: ${USER}
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
     logging:
       driver: json-file
     environment:
+      - PUID=1000
+      - GUID=1000
       - TZ=${TZ}
     volumes:
       - ${CONTAINER_PATH}/prowlarr/config:/config
@@ -200,13 +222,16 @@ services:
 
 # Qbittorrent - We all know what it is
   qbittorrent:
-    user: ${USER}
+    # user: ${USER}
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
     logging:
       driver: json-file
     environment:
+      - PUID=1000
+      - GUID=1000
       - TZ=${TZ}
+      - WEBUI_PORT=8080
     volumes:
       - ${CONTAINER_PATH}/qbittorrent/config:/config
       - ${DATA_PATH}/torrents:/data/torrents
