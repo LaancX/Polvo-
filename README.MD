@@ -204,7 +204,7 @@ No meu HDD que está montado no diretório /mnt/home-server; eu tenho a pasta /d
 
 3. Não esqueça das permissões das respectivas pastas:
 
-```sudo chown -R $USER:$USER /containers && sudo chown -R $USER:$USER /data```
+```sudo chown -R $USER:$USER /containers && sudo chown -R $USER:$USER /data```</br>
 ```sudo chmod -R a=,a+rX,u+w,g+w /containers && sudo chmod -R a=,a+rX,u+w,g+w /data ```
 
 4. Subir os contêineres
