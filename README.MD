@@ -190,13 +190,16 @@ Aqui estão os passos básicos para colocar os serviços e o servidor no ar:
 1. Clonar o repositório
   ```git clone https://github.com/LaancX/Polvo-.git```
 
-2. Organizar a estrutura de pastas no host do docker
+2. Organizar a estrutura de pastas no host do docker.
+
 Após a instalação do docker e o docker-compose, você vai precisar organizar a estrutura de pastas que os serviços utilizarão. Para isso, há um tutorial detalhado de como fazer para evitar problemas no ambiente, que pode ser acessado [aqui](https://trash-guides.info/Hardlinks/How-to-setup-for/Docker/)</br>
 
-  No meu compose são dois diretórios que eu utilizo no meu sistema:
-  Na pasta do projeto eu tenho o /containers, que é onde ficam os arquivos de configurações para que os dados persistam caso o servidor reinicie ou desligue.
+No meu compose são dois diretórios que eu utilizo no meu sistema:
+
+Na pasta do projeto eu tenho o /containers, que é onde ficam os arquivos de configurações para que os dados persistam caso o servidor reinicie ou desligue.
   - /containers
-  No meu HDD que está montado no diretório /mnt/home-server; eu tenho a pasta /data, o qual necessita de um pouco mais de espaço.
+
+No meu HDD que está montado no diretório /mnt/home-server; eu tenho a pasta /data, o qual necessita de um pouco mais de espaço.
   - /data
 
 3. Não esqueça das permissões das respectivas pastas:
