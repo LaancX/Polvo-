@@ -36,7 +36,7 @@ A estrutura aqui no github será dividida em pastas; a root sendo o meu servidor
 A estrutura de arquivos YML também estão divididos:
 
 - core.yml -> Serviços de monitoramento, proxy reverso, atualizações automáticas de containeres e dashboard.
-- media-stack -> Serviços de mídia que são dependentes entre si.
+- media-stack.yml -> Serviços de mídia que são dependentes entre si.
 
 <a id="Objetivo"></a>
 ## Objetivo
