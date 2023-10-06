@@ -27,11 +27,16 @@
 
 Este projeto é um ambiente de servidor doméstico que eu criei para atender a minha jornada de autodescobrimento. Aqui está um pouco do meu conhecimento que eu aprendi ao longo do tempo, bem como alguns erros e acertos que podem ser vistos de acordo com sua experiência na área. 
 
-Sinta-se à vontade para clonar o repositório e fazer do meu ambiente o seu próprio, afinal, tudo isso aqui é FOSS. :)
+Sinta-se à vontade para clonar o repositório e fazer do meu ambiente o seu próprio, afinal, tudo isso aqui é FOSS :)
 
 Este projeto até o momento tende a ter uma estrutura baseada em contêineres.
 
-A estrutura aqui no github será dividida em pastas; a root sendo o meu servidor físico (o meu famoso macbook que chamo carinhosamente de crapbook, com um ubuntu server instalado) e; um servidor VPS na OCI
+A estrutura aqui no github será dividida em pastas; a root sendo o meu servidor físico (o meu famoso macbook que chamo carinhosamente de crapbook); um servidor VPS na OCI e; um Raspberry Pi 3B
+
+A estrutura de arquivos YML também estão divididos:
+
+- core.yml -> Serviços de monitoramento, proxy reverso, atualizações automáticas de containeres e dashboard.
+- media-stack -> Serviços de mídia que são dependentes entre si.
 
 <a id="Objetivo"></a>
 ## Objetivo
@@ -42,7 +47,7 @@ Ué, como assim?
 
 Muitas das tecnologias que usamos diariamente são encontradas apenas em grandes empresas, com códigos fechados e com uma política restritiva. 
 
-Levando em consideração a filosofia do próprio linux, eu como um relês profissional da área de segurança da informação não acredito que as coisas deveriam ter essa política agressiva para com os usuários, e, portanto, busco de certa forma implementar as mesmas coisas de grandes empresas no meu próprio ambiente, utilizando meus recursos e perpetuando a transparência como acredito que as coisas deveriam ser.
+Levando em consideração a filosofia do próprio linux, eu como um profissional da área de segurança da informação não acredito que as coisas deveriam ter essa política agressiva para com os usuários, e, portanto, busco de certa forma implementar as mesmas coisas de grandes empresas no meu próprio ambiente, utilizando meus recursos e perpetuando a transparência como acredito que as coisas deveriam ser.
 
 <a id="Serviços"></a>
 ## Serviços
@@ -188,15 +193,37 @@ Aqui estão os passos básicos para colocar os serviços e o servidor no ar:
 2. Organizar a estrutura de pastas no host do docker
 Após a instalação do docker e o docker-compose, você vai precisar organizar a estrutura de pastas que os serviços utilizarão. Para isso, há um tutorial detalhado de como fazer para evitar problemas no ambiente, que pode ser acessado [aqui](https://trash-guides.info/Hardlinks/How-to-setup-for/Docker/)</br>
 
-  No meu compose são dois diretórios que eu utilizo na root do meu sistema:
+  No meu compose são dois diretórios que eu utilizo no meu sistema:
+  Na pasta do projeto eu tenho o /containers, que é onde ficam os arquivos de configurações para que os dados persistam caso o servidor reinicie ou desligue.
   - /containers
+  No meu HDD que está montado no diretório /mnt/home-server; eu tenho a pasta /data, o qual necessita de um pouco mais de espaço.
   - /data
 
-3. Subir os contêineres
-Após a organização das pastas você terá que executar um comando somente: 
-  ```docker-compose up -d```
+3. Não esqueça das permissões das respectivas pastas:
 
-4. Após isso entra a parte de configurações. Há vários guias de como fazer isso no youtube e na internet, portanto, não serei redundante.
+```sudo chown -R $USER:$USER /containers && sudo chown -R $USER:$USER /data```
+```sudo chmod -R a=,a+rX,u+w,g+w /containers && sudo chmod -R a=,a+rX,u+w,g+w /data ```
+
+4. Subir os contêineres
+Após a organização das pastas você terá que executar: 
+  ```docker compose up -f core.yml -d && docker compose -f media-stack.yml -d```
+
+Obs: Provavelmente algumas informações aparecerão quando este comando for executado, como algumas variáveis não declaradas. No meu arquivo de .env existem algumas variáveis que eu armazeno as chaves APIs usadas no projeto. Estas variáveis, caso você exponha publicamente os serviços, não devem conter valores no arquivo, pois alguém pode tomar controle do seu ambiente.
+
+Como estes valores só se tornam disponíveis após a execução deste comando, não há como preencer as variáveis anteriormente ao deploy. Após a configuração individual dos containers você pode substituir as variáveis pelas respectivas chaves no ambiente do host, como:
+
+```echo -n "export JELLYFIN_KEY=apikeyapikeyapikey" >> ~/.bashrc```
+```source ~/.bashrc```
+
+Após isso você consegue testar se as varíaveis foram armazenadas corretamente com:
+```echo $JELLYFIN_KEY```
+
+A saída deve ser a chave de API que o Jellyfin configurou.
+
+5. Para que as informações das chaves sejam carregadas, emita os comandos de docker compose novamente.
+
+6. Após isso entra a parte de configurações individuais dos serviços. Há vários guias de como fazer isso no youtube e na internet, portanto, não serei redundante.
+
 
 Se tiver alguma dúvida ou precisar de ajuda, sinta-se à vontade para abrir uma issue no GitHub.
 
@@ -222,6 +249,3 @@ Se você tiver uma sugestão que possa melhorar isso, dá um fork no projeto e f
 * [ ] Implementar o certificado Let's Encrypt nas conexões via HTTPS
 * [ ] Implementar VPN (Wireguard; ZeroTier; CloudFlare Tunnel)
 * [ ] Migrar para um ambiente de Kubernetes (k3s; minikube)
-
-### Obs
-Asteriscos (*) indicam partes ainda em construção
