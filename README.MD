@@ -209,7 +209,7 @@ No meu HDD que está montado no diretório /mnt/home-server; eu tenho a pasta /d
 
 4. Subir os contêineres
 Após a organização das pastas você terá que executar: 
-  ```docker compose up -f core.yml -d && docker compose -f media-stack.yml -d```
+```docker compose up -f core.yml -d && docker compose -f media-stack.yml -d```
 
 Obs: Provavelmente algumas informações aparecerão quando este comando for executado, como algumas variáveis não declaradas. No meu arquivo de .env existem algumas variáveis que eu armazeno as chaves APIs usadas no projeto. Estas variáveis, caso você exponha publicamente os serviços, não devem conter valores no arquivo, pois alguém pode tomar controle do seu ambiente.
 
