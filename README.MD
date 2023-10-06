@@ -194,7 +194,7 @@ Aqui estão os passos básicos para colocar os serviços e o servidor no ar:
 
 Após a instalação do docker e o docker-compose, você vai precisar organizar a estrutura de pastas que os serviços utilizarão. Para isso, há um tutorial detalhado de como fazer para evitar problemas no ambiente, que pode ser acessado [aqui](https://trash-guides.info/Hardlinks/How-to-setup-for/Docker/)</br>
 
-No meu compose são dois diretórios que eu utilizo no meu sistema:
+Nos meus composes (media-stack e core) são dois diretórios que eu utilizo no meu sistema:
 
 Na pasta do projeto eu tenho o /containers, que é onde ficam os arquivos de configurações para que os dados persistam caso o servidor reinicie ou desligue.
   - /containers
