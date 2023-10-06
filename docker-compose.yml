@@ -18,6 +18,14 @@ services:
       - "443:443"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    labels:
+      # Homepage's
+      - homepage.group=Reverse Proxy
+      - homepage.name=Træfik
+      - homepage.icon=${ICON_WEB}/traefik.png
+      - homepage.href=http:${DOMAIN}:8080
+      - homepage.widget.type=traefik
+      - homepage.widget.url=http:${DOMAIN}:8080
     networks:
       traefik:
         ipv4_address: 172.18.0.10
@@ -31,10 +39,18 @@ services:
     # ports:
     #   - 3000:3000
     labels:
-      - 'traefik.enable=true'
+      # Traefik's
+      - "traefik.enable=true"
       - "traefik.http.routers.whatsupdocker.rule=Host(`whatsupdocker.${DOMAIN}`)" # && PathPrefix(`/wud`)"
       - "traefik.http.routers.whatsupdocker.entrypoints=web"
       - "traefik.http.services.whatsupdocker.loadbalancer.server.port=3000"
+      # Homepage's
+      - homepage.group=Updates
+      - homepage.name=What's up Docker
+      - homepage.icon=${ICON_WEB}/wud-light.png
+      - homepage.href=http://whatsupdocker.${DOMAIN}
+      - homepage.widget.type=whatsupdocker
+      - homepage.widget.url=http://whatsupdocker.${DOMAIN}
     networks:
       - traefik
 
@@ -42,17 +58,16 @@ services:
   homepage:
     image: ghcr.io/benphelps/homepage:latest
     container_name: homepage
-    environment:
-      PUID: 1000
-      GUID: 1000
     # ports:
     #   - 3000:3000
     volumes:
+      - ${IMAGE_PATH}:/app/public/images
       - ${CONTAINER_PATH}/homepage/config:/app/config 
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
     restart: unless-stopped
     labels:
-      - 'traefik.enable=true'
+      # Traefik's
+      - "traefik.enable=true"
       - "traefik.http.routers.homepage.rule=Host(`homepage.${DOMAIN}`)" # && PathPrefix(`/homepage`)"
       - "traefik.http.routers.homepage.entrypoints=web"
       - "traefik.http.services.homepage.loadbalancer.server.port=3000"
@@ -65,7 +80,7 @@ services:
     container_name: jellyfin
     logging:
       driver: json-file
-    # network_mode: 'host' #- proxied through traefik
+    # network_mode: 'host' # proxied through traefik
     volumes:
       - ${CONTAINER_PATH}/jellyfin/config:/config
       - ${CONTAINER_PATH}/jellyfin/cache:/cache
@@ -79,12 +94,22 @@ services:
     networks:
       - traefik
     labels:
-      - 'traefik.enable=true'
+      # Traefik's
+      - "traefik.enable=true"
       - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.${DOMAIN}`)" # && PathPrefix(`/jellyfin`)"
       - "traefik.http.routers.jellyfin.entrypoints=web"
       - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+      # Homepage's
+      - homepage.group=Media
+      - homepage.name=Jellyfin
+      - homepage.icon=${ICON_WEB}/jellyfin.png
+      - homepage.href=http://jellyfin.${DOMAIN}
+      - homepage.widget.type=jellyfin
+      - homepage.widget.url=http://jellyfin.${DOMAIN}
+      - homepage.widget.enableBlocks=true
+      - homepage.widget.key=${JELLYFIN_KEY}
 
-#Jellyseerr - Manages requests for the media library
+# Jellyseerr - Manages requests for the media library
   jellyseerr:
     image: fallenbagel/jellyseerr:latest
     container_name: jellyseerr
@@ -99,10 +124,19 @@ services:
     networks:
       - traefik
     labels:
-      - 'traefik.enable=true'
+      # Traefik's
+      - "traefik.enable=true"
       - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.${DOMAIN}`)" # && PathPrefix(`/jellyseerr`) "
       - "traefik.http.routers.jellyseerr.entrypoints=web"
       - "traefik.http.services.jellyseerr.loadbalancer.server.port=5055"
+      # Homepage's
+      - homepage.group=Media
+      - homepage.name=Jellyseerr
+      - homepage.icon=${ICON_WEB}/jellyseerr.png
+      - homepage.href=http://jellyseerr.${DOMAIN}
+      - homepage.widget.type=jellyseerr
+      - homepage.widget.url=http://jellyseerr.${DOMAIN}
+      - homepage.widget.key=${JELLYSEERR_KEY}
 
 # Uptime-kuma - Playing ping pong with all the cool containers
   uptime-kuma:
@@ -110,16 +144,27 @@ services:
     container_name: uptime-kuma
     volumes:
       - ${CONTAINER_PATH}/uptime-kuma/data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
     # ports:
     #   - 3001:3001
     restart: unless-stopped
     networks:
       - traefik
     labels:
-      - 'traefik.enable=true'
+      # Traefik's
+      - "traefik.enable=true"
       - "traefik.http.routers.uptime-kuma.rule=Host(`uptime-kuma.${DOMAIN}`)" # && PathPrefix(`/uptime-kuma`)"
       - "traefik.http.routers.uptime-kuma.entrypoints=web"
       - "traefik.http.services.uptime-kuma.loadbalancer.server.port=3001"
+      # Homepage's
+      - homepage.group=Monitoring
+      - homepage.name=Uptime-kuma
+      - homepage.icon=${ICON_WEB}/uptime-kuma.png
+      - homepage.href=http://uptime-kuma.${DOMAIN}
+      - homepage.widget.type=uptimekuma
+      - homepage.widget.url=http://uptime-kuma.${DOMAIN}
+      - homepage.widget.slug=polvo
+
 
 # Bazarr - Manages and downloads subtitles based on my requirements
   bazarr:
@@ -141,14 +186,22 @@ services:
     networks:
       - traefik
     labels:
-      - 'traefik.enable=true'
+      # Traefik's
+      - "traefik.enable=true"
       - "traefik.http.routers.bazarr.rule=Host(`bazarr.${DOMAIN}`)" # && PathPrefix(`/bazarr`)"
       - "traefik.http.routers.bazarr.entrypoints=web"
       - "traefik.http.services.bazarr.loadbalancer.server.port=6767"
+      # Homepage's
+      - homepage.group=Workers
+      - homepage.name=Bazarr
+      - homepage.icon=${ICON_WEB}/bazarr-light.png
+      - homepage.href=http://bazarr.${DOMAIN}
+      - homepage.widget.type=bazarr
+      - homepage.widget.url=http://bazarr.${DOMAIN}
+      - homepage.widget.key=${BAZARR_KEY}
 
 # Sonarr - Automatically download TV Shows via Usenet and the qBittorrent
   sonarr:
-    # user: ${USER}
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
     logging:
@@ -167,10 +220,20 @@ services:
     networks:
       - traefik
     labels:
-      - 'traefik.enable=true'
+      # Traefik's
+      - "traefik.enable=true"
       - "traefik.http.routers.sonarr.rule=Host(`sonarr.${DOMAIN}`)" # && PathPrefix(`/sonarr`)"
       - "traefik.http.routers.sonarr.entrypoints=web"
       - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
+      # Homepage's
+      - homepage.group=Workers
+      - homepage.name=Sonarr
+      - homepage.icon=${ICON_WEB}/sonarr.png
+      - homepage.href=http://sonarr.${DOMAIN}
+      - homepage.widget.type=sonarr
+      - homepage.widget.url=http://sonarr.${DOMAIN}
+      - homepage.widget.key=${SONARR_KEY}
+      - homepage.widget.enableQueue=true
 
 # Radarr - Automatically download movies via Usenet and the qBittorrent
   radarr:
@@ -192,10 +255,20 @@ services:
     networks:
       - traefik
     labels:
-      - 'traefik.enable=true'
+      # Traefik's
+      - "traefik.enable=true"
       - "traefik.http.routers.radarr.rule=Host(`radarr.${DOMAIN}`)" # && PathPrefix(`/radarr`)"
       - "traefik.http.routers.radarr.entrypoints=web"
       - "traefik.http.services.radarr.loadbalancer.server.port=7878"
+      # Homepage's
+      - homepage.group=Workers
+      - homepage.name=Radarr
+      - homepage.icon=${ICON_WEB}/radarr.png
+      - homepage.href=http://radarr.${DOMAIN}
+      - homepage.widget.type=radarr
+      - homepage.widget.url=http://radarr.${DOMAIN}
+      - homepage.widget.key=${RADARR_KEY}
+      - homepage.widget.enableQueue=true
 
 # Prowlarr - Gives the indexers to the arrs services
   prowlarr:
@@ -215,14 +288,22 @@ services:
     networks:
       - traefik
     labels:
-      - 'traefik.enable=true'
+      # Traefik's
+      - "traefik.enable=true"
       - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.${DOMAIN}`)" # && PathPrefix(`/prowlarr`)"
       - "traefik.http.routers.prowlarr.entrypoints=web"
       - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
+      # Homepage's
+      - homepage.group=Workers
+      - homepage.name=Prowlarr
+      - homepage.icon=${ICON_WEB}/prowlarr.png
+      - homepage.href=http://prowlarr.${DOMAIN}
+      - homepage.widget.type=prowlarr
+      - homepage.widget.url=http://prowlarr.${DOMAIN}
+      - homepage.widget.key=${PROWLARR_KEY}
 
 # Qbittorrent - We all know what it is
   qbittorrent:
-    # user: ${USER}
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
     logging:
@@ -243,54 +324,22 @@ services:
     networks:
       - traefik
     labels:
-      - 'traefik.enable=true'
+      # Traefik's
+      - "traefik.enable=true"
       - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.${DOMAIN}`)" # && PathPrefix(`/qbittorrent`)"
       - "traefik.http.routers.qbittorrent.entrypoints=web"
       - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
-
+      # Homepage's
+      - homepage.group=Downloads
+      - homepage.name=qBittorrent
+      - homepage.icon=${ICON_WEB}/qbittorrent.png
+      - homepage.href=http://qbittorrent.${DOMAIN}
+      - homepage.widget.type=qbittorrent
+      - homepage.widget.url=http://qbittorrent.${DOMAIN}
+      - homepage.widget.username=${QBIT_USERNAME}
+      - homepage.widget.password=${QBIT_PASSWORD}
 networks:
   traefik:
     ipam:
       config:
         - subnet: 172.18.0.0/16
-
-# Graveyard - Here lies the containers that I killed but may be revived someday (or not)
-
-# # Watchtower - Keeping and eye on the containers' versions around3
-#   watchtower:
-#     container_name: watchtower
-#     image: containrrr/watchtower
-#     volumes:
-#       - /var/run/docker.sock:/var/run/docker.sock
-#     networks:
-#       traefik:
-#         ipv4_address: 172.18.0.#
-#     labels:
-#       - 'traefik.enable=true'
-#       - "traefik.http.routers.watchtower.rule=Host(`watchtower.${DOMAIN}`)" # && PathPrefix(`/jellyfin`)"
-#       - "traefik.http.routers.watchtower.entrypoints=web"
-
-# # Jackett
-#   jackett:
-#     image: lscr.io/linuxserver/jackett:latest
-#     container_name: jackett
-#     environment:
-#       - PUID=${PUID}
-#       - PGID=${PGID}
-#       - TZ=${TZ}
-#       - AUTO_UPDATE=true #optional
-#       # - RUN_OPTS=true #optional
-#     volumes:
-#       - ${CONTAINER_PATH}/jackett/data:/config
-#       - /data/torrents:/downloads
-#     # ports:
-#     #   # - 9117:9117
-#     labels:
-#       - 'traefik.enable=true'
-#       - "traefik.http.routers.jackett.rule=Host(`jackett.${DOMAIN}`)" # && PathPrefix(`/jackett`)"
-#       - "traefik.http.routers.jackett.entrypoints=web"
-#       - "traefik.http.services.jackett.loadbalancer.server.port=9117"
-#     restart: unless-stopped
-#     networks:
-#       traefik:
-#         ipv4_address: 172.18.0.#
