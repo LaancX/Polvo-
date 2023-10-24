@@ -65,7 +65,7 @@ O Traefik é a porta de entrada. Ele atua proxy reverso no ambiente, direcionand
 A configuração do Traefik a princípio é algo um pouco complexo, ainda mais quando é sua primeira implementação do serviço. Depois de um tempo ele começa a se tornar muito simples, com cada serviço que é adicionado no arquivo de docker-compose basta adicionar labels para que haja a integração com o proxy.
 
 ### What's up, Docker? - Monitoramento automatizado
-<img src="/Imagens/wud.png" alt="WUD" width="50" height="50" />
+<img src="/Imagens/wud-light.png" alt="WUD" width="50" height="50" />
 </br>
 
 O "What's Up Docker?" é como meu assistente pessoal digital que monitora meus contêineres em tempo real. Aqui estão algumas funções:
@@ -98,6 +98,47 @@ O Jellyseerr é meu assistente dedicado ao Jellyfin, me ajudando a gerenciar as 
 * Garantir que meus amigos e familiares obtenham o que desejam
 * Simplificar a organização da minha biblioteca
 
+### Plex - Backup central mídia
+<img src="/Imagens/plex.png" alt="" width="50" height="50" />
+</br>
+ 
+O Plex também é a resposta para todas as minhas necessidades de mídia, porém aqui ele fica de coadjuvante. Aqui estão alguns dos benefícios:
+
+* Transmissão de mídia local e remota
+* Organização eficiente da coleção de filmes, séries e música
+* Acesso simplificado a partir de dispositivos de sua escolha
+
+### Overseerr - Gerenciamento de solicitações de mídia para o plex
+<img src="/Imagens/overseerr.png" alt="" width="50" height="50" />
+</br>
+
+O Overseerr é meu assistente dedicado ao Plex, me ajudando a gerenciar as solicitações da minha biblioteca de mídia, também de modo secundário. Aqui estão alguns pontos:
+
+* Acompanhamento e organização de pedidos de filmes e séries
+* Integração perfeita com o Plex e outras fontes de mídia
+* Integração com o Tautulli
+* Garantia de que todos tenham acesso ao conteúdo que desejam
+
+### Tautulli - Monitoramento Inteligente do Plex
+<img src="/Imagens/tautulli.png" alt="" width="50" height="50" />
+</br>
+
+O Tautulli é o companheiro inteligente para monitorar e acompanhar a atividade do Plex:
+
+* Estatísticas detalhadas sobre o uso do Plex dos usuários locais e remotos
+* Notificações personalizadas para eventos importantes
+* Ajuda na otimização da experiência de streaming da biblioteca de mídia
+
+### Gotify - Notificações Simplificadas
+<img src="/Imagens/gotify.png" alt="" width="50" height="50" />
+</br>
+
+O Gotify é a solução de notificação perfeita para me manter atualizado sobre os meus aplicativos e serviços, oferecendo:
+
+* Notificações centralizadas para todos os seus aplicativos e servidores
+* Personalização de alertas para atender às suas necessidades
+* Controle total sobre suas mensagens e notificações
+
 ### Uptime-Kuma - Monitoramento da disponibilidade dos contêineres
 <img src="/Imagens/uptime-kuma.png" alt="" width="50" height="50" />
 </br>
@@ -109,7 +150,7 @@ O Uptime-Kuma me mantem informado sobre o status de todos os meus contêineres. 
 * Tem um painel de controle simples e eficaz
 
 Obs: esse carinha vai sair daqui e vai para minha VPS, porque o intuito é mantê-lo no ar 24/7 com uma disponibilidade de pelo menos de 3 noves.
-saiba mais [aqui](https://www.stratus.com/about/company-information/uptime-meter/#:~:text=Availability%20is%20normally%20expressed%20in,have%20on%20your%20server%20downtime.)
+saiba mais [aqui](https://en.wikipedia.org/wiki/High_availability#Percentage_calculation)
 
 ### Bazarr - Gerenciamento de legendas
 <img src="/Imagens/bazarr.png" alt="" width="50" height="50" />
@@ -207,7 +248,13 @@ No meu HDD que está montado no diretório /mnt/home-server; eu tenho a pasta /d
 ```sudo chown -R $USER:$USER /containers && sudo chown -R $USER:$USER /data```</br>
 ```sudo chmod -R a=,a+rX,u+w,g+w /containers && sudo chmod -R a=,a+rX,u+w,g+w /data ```
 
-4. Subir os contêineres
+4. Criar a rede (neste caso a minha se chama traefik).
+
+```docker network create traefik```
+
+A rede criada por padrão é do tipo "bridge". Entenda mais [aqui.](https://docs.docker.com/network/drivers/bridge/)
+
+5. Subir os contêineres
 Após a organização das pastas você terá que executar: 
 
 ```docker compose up -f core.yml -d && docker compose -f media-stack.yml -d```
@@ -247,9 +294,9 @@ Se você tiver uma sugestão que possa melhorar isso, dá um fork no projeto e f
 <a id="Roadmap"></a>
 ## Roadmap
 
-* [ ] Implementar SIEM na VPS (Wazuh)
+* [x] Implementar SIEM na VPS (Wazuh)
 * [ ] Configurar o WUD (What's Up Docker)
-* [ ] Transferir configurações estáticas do traefik para o arquivo .toml ou .yml
-* [ ] Implementar o certificado Let's Encrypt nas conexões via HTTPS
+* [x] Transferir configurações estáticas do traefik para o arquivo .toml ou .yml
+* [x] Implementar o certificado Let's Encrypt nas conexões via HTTPS
 * [ ] Implementar VPN (Wireguard; ZeroTier; CloudFlare Tunnel)
 * [ ] Migrar para um ambiente de Kubernetes (k3s; minikube)
