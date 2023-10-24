@@ -1,0 +1,148 @@
+version: '3.5'
+services:
+# Traefik - Reverse proxy FTW
+  traefik:
+    image: "traefik:v2.10"
+    container_name: "traefik"
+    restart: unless-stopped
+    environment:
+      - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
+      - CF_API_EMAIL=${EMAIL}
+    ports:
+      - "80:80"
+      - "8080:8080"
+      - "443:443"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "${CONTAINER_PATH}/traefik/letsencrypt/acme.json:/acme.json"
+      - "${CONTAINER_PATH}/traefik/config.yml:/config.yml:ro"
+      - "${CONTAINER_PATH}/traefik/traefik.yml:/traefik.yml:ro"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)" # && PathPrefix(`/traefik`)"
+      - "traefik.http.routers.traefik.entrypoints=web"
+                        #-------- Secure --------
+      - "traefik.http.routers.traefik-secure.entrypoints=websecure"
+      - "traefik.http.routers.traefik-secure.rule=Host(`traefik.${DOMAIN}`)"
+      - "traefik.http.routers.traefik-secure.tls=true"
+      - "traefik.http.routers.traefik-secure.tls.certresolver=cloudflare"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].main=${DOMAIN}"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.${DOMAIN}"
+      - "traefik.http.routers.traefik-secure.service=api@internal"
+      - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
+      # Homepage's
+      - homepage.group=Reverse Proxy
+      - homepage.name=Træfik
+      - homepage.icon=${ICON_WEB}/traefik.png
+      - homepage.href=https:${DOMAIN}:8080
+      - homepage.widget.type=traefik
+      - homepage.widget.url=https:${DOMAIN}:8080
+    # networks:
+    #   traefik:
+
+# What's up Docker? - Just like watchtower but cooler
+  whatsupdocker:
+    image: fmartinou/whats-up-docker
+    container_name: wud
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    # ports:
+    #   - 3000:3000
+    labels:
+      # Traefik's
+      - "traefik.enable=true"
+      - "traefik.http.services.whatsupdocker.loadbalancer.server.port=3000"
+                              #-------- Secure --------
+      - "traefik.http.routers.whatsupdocker-secure.rule=Host(`whatsupdocker.${DOMAIN}`)"
+      - "traefik.http.routers.whatsupdocker-secure.entrypoints=websecure"
+      - "traefik.http.routers.whatsupdocker-secure.tls=true"
+      - "traefik.http.middlewares.whatsupdocker-https-redirect.redirectscheme.scheme=https"
+      # Homepage's
+      - homepage.group=Updates
+      - homepage.name=What's up Docker
+      - homepage.icon=${ICON_WEB}/wud-light.png
+      - homepage.href=https://whatsupdocker.${DOMAIN}
+      - homepage.widget.type=whatsupdocker
+      - homepage.widget.url=https://whatsupdocker.${DOMAIN}
+    # networks:
+    #   traefik:
+
+# HomePage - Dashboard
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    # ports:
+    #   - 3000:3000
+    volumes:
+      - ${IMAGE_PATH}:/app/public/images
+      - ${CONTAINER_PATH}/homepage/config:/app/config 
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    restart: unless-stopped
+    labels:
+      # Traefik's
+      - "traefik.enable=true"
+      - "traefik.http.services.homepage.loadbalancer.server.port=3000"
+                              #-------- Secure --------
+      - "traefik.http.routers.homepage-secure.rule=Host(`homepage.${DOMAIN}`)"
+      - "traefik.http.routers.homepage-secure.entrypoints=websecure"
+      - "traefik.http.routers.homepage-secure.tls=true"
+      - "traefik.http.middlewares.homepage-https-redirect.redirectscheme.scheme=https"
+    # networks:
+    #   traefik:
+
+# Uptime-kuma - Playing ping pong with all the cool containers
+  uptime-kuma:
+    image: louislam/uptime-kuma:latest
+    container_name: uptime-kuma
+    volumes:
+      - ${CONTAINER_PATH}/uptime-kuma/data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    # ports:
+    #   - 3001:3001
+    restart: unless-stopped
+    # networks:
+    #   traefik:
+    labels:
+      # Traefik's
+      - "traefik.enable=true"
+      - "traefik.http.services.uptime-kuma.loadbalancer.server.port=3001"
+                              #-------- Secure --------
+      - "traefik.http.routers.uptime-kuma-secure.rule=Host(`uptime-kuma.${DOMAIN}`)"                        
+      - "traefik.http.routers.uptime-kuma-secure.entrypoints=websecure"
+      - "traefik.http.routers.uptime-kuma-secure.tls=true"
+      - "traefik.http.middlewares.uptime-kuma-https-redirect.redirectscheme.scheme=https"
+      # Homepage's
+      - homepage.group=Monitoring
+      - homepage.name=Uptime-kuma
+      - homepage.icon=${ICON_WEB}/uptime-kuma.png
+      - homepage.href=https://uptime-kuma.${DOMAIN}
+      - homepage.widget.type=uptimekuma
+      - homepage.widget.url=https://uptime-kuma.${DOMAIN}
+      - homepage.widget.slug=polvo
+
+# Gotify - Outro app para receber notificações push
+  gotify:
+    image: gotify/server
+    container_name: gotify
+    # ports:
+    #   - "80:80"
+    volumes:
+      - ${CONTAINER_PATH}/gotify/data:/app/data
+    # networks:
+    #   traefik:
+    labels:
+      # Traefik's
+      - "traefik.enable=true"
+      - "traefik.http.services.gotify.loadbalancer.server.port=80"
+                              #-------- Secure --------
+      - "traefik.http.routers.gotify-secure.rule=Host(`gotify.${DOMAIN}`)"                        
+      - "traefik.http.routers.gotify-secure.entrypoints=websecure"
+      - "traefik.http.routers.gotify-secure.tls=true"
+      # - "traefik.http.middlewares.gotify-https-redirect.redirectscheme.scheme=https"
+    restart: unless-stopped
+
+networks:
+  default:
+    external: true
+    name: traefik
