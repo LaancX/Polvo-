@@ -294,7 +294,7 @@ Se você tiver uma sugestão que possa melhorar isso, dá um fork no projeto e f
 <a id="Roadmap"></a>
 ## Roadmap
 
-* [x] Implementar SIEM na VPS (Wazuh)
+* [ ] Implementar SIEM na VPS (Wazuh)
 * [ ] Configurar o WUD (What's Up Docker)
 * [x] Transferir configurações estáticas do traefik para o arquivo .toml ou .yml
 * [x] Implementar o certificado Let's Encrypt nas conexões via HTTPS
