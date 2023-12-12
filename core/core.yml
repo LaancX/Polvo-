@@ -38,8 +38,39 @@ services:
       - homepage.href=https:${DOMAIN}:8080
       - homepage.widget.type=traefik
       - homepage.widget.url=https:${DOMAIN}:8080
-    # networks:
-    #   traefik:
+
+# Netdata - Monitoramento do servidor
+  netdata:
+    image: netdata/netdata
+    container_name: netdata
+    hostname: crapbook
+    pid: host
+    restart: unless-stopped
+    cap_add:
+      - SYS_PTRACE
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - ${CONTAINER_PATH}/netdata/config:/etc/netdata
+      - netdatalib:/var/lib/netdata
+      - netdatacache:/var/cache/netdata
+      - /etc/hostname:/etc/hostname:ro
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.netdata.loadbalancer.server.port=19999"
+                              #-------- Secure --------
+      - "traefik.http.routers.netdata-secure.rule=Host(`netdata.${DOMAIN}`)"
+      - "traefik.http.routers.netdata-secure.entrypoints=websecure"
+      - "traefik.http.routers.netdata-secure.tls=true"
+      - "traefik.http.middlewares.netdata-https-redirect.redirectscheme.scheme=https"
 
 # What's up Docker? - Just like watchtower but cooler
   whatsupdocker:
@@ -65,8 +96,6 @@ services:
       - homepage.href=https://whatsupdocker.${DOMAIN}
       - homepage.widget.type=whatsupdocker
       - homepage.widget.url=https://whatsupdocker.${DOMAIN}
-    # networks:
-    #   traefik:
 
 # HomePage - Dashboard
   homepage:
@@ -88,8 +117,6 @@ services:
       - "traefik.http.routers.homepage-secure.entrypoints=websecure"
       - "traefik.http.routers.homepage-secure.tls=true"
       - "traefik.http.middlewares.homepage-https-redirect.redirectscheme.scheme=https"
-    # networks:
-    #   traefik:
 
 # Uptime-kuma - Playing ping pong with all the cool containers
   uptime-kuma:
@@ -101,8 +128,6 @@ services:
     # ports:
     #   - 3001:3001
     restart: unless-stopped
-    # networks:
-    #   traefik:
     labels:
       # Traefik's
       - "traefik.enable=true"
@@ -129,8 +154,6 @@ services:
     #   - "80:80"
     volumes:
       - ${CONTAINER_PATH}/gotify/data:/app/data
-    # networks:
-    #   traefik:
     labels:
       # Traefik's
       - "traefik.enable=true"
@@ -139,10 +162,14 @@ services:
       - "traefik.http.routers.gotify-secure.rule=Host(`gotify.${DOMAIN}`)"                        
       - "traefik.http.routers.gotify-secure.entrypoints=websecure"
       - "traefik.http.routers.gotify-secure.tls=true"
-      # - "traefik.http.middlewares.gotify-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.gotify-https-redirect.redirectscheme.scheme=https"
     restart: unless-stopped
 
 networks:
   default:
     external: true
     name: traefik
+
+volumes:
+  netdatalib:
+  netdatacache:
