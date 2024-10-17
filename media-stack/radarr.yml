@@ -1,0 +1,47 @@
+services:
+# Radarr - Automatically download movies via Usenet and the qBittorrent
+  radarr:
+    container_name: radarr
+    image: cr.hotio.dev/hotio/radarr:latest
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+    networks:
+      - traefik
+    # ports:
+    #   - 7878:7878
+    # profiles: ["media", "arrs", "all"]
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+    volumes:
+      - $CONTAINER_PATH/radarr/config:/config
+      - $DATA_PATH/media/movies:/data/movies1
+      - $DATA_PATH/media2/movies:/data/movies2
+      - $DATA_PATH/media/torrents:/data/downloads
+      - "/etc/localtime:/etc/localtime:ro"
+    labels:
+      - "traefik.enable=true"
+      # Service (app port)
+      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
+      # Domain rule
+      - "traefik.http.routers.radarr.rule=Host(`radarr.$DOMAIN`)"
+      # Entrypoint
+      - "traefik.http.routers.radarr.entrypoints=websecure"
+      # Enable tls
+      - "traefik.http.routers.radarr.tls=true"
+      # Redirect from http to https
+      - "traefik.http.middlewares.radarr-https-redirect.redirectscheme.scheme=https"
+      
+      # Homepage's
+      - homepage.group=Workers
+      - homepage.name=Radarr
+      - homepage.icon=$ICON_WEB/radarr.png
+      - homepage.href=https://radarr.$DOMAIN
+      - homepage.widget.type=radarr
+      - homepage.widget.url=https://radarr.$DOMAIN
+      - homepage.widget.key=$RADARR_KEY
+      - homepage.widget.enableQueue=true

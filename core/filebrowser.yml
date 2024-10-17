@@ -1,0 +1,33 @@
+services:
+  # File Browser - Explorer
+  filebrowser:
+    image: filebrowser/filebrowser:s6
+    container_name: filebrowser
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    # profiles: ["apps", "all"]
+    networks:
+      - traefik
+    # ports:
+    #   - "81:80"
+    volumes:
+      - $MNT_PATH:/srv
+      - $CONTAINER_PATH/filebrowser/config:/config
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+    labels:
+      - "traefik.enable=true"
+      # Service (app port)
+      - "traefik.http.services.filebrowser.loadbalancer.server.port=80"
+      # Domain rule
+      - "traefik.http.routers.filebrowser.rule=Host(`filebrowser.$DOMAIN`)"
+      # Entrypoint
+      - "traefik.http.routers.filebrowser.entrypoints=websecure"
+      # Enable tls
+      - "traefik.http.routers.filebrowser.tls=true"
+      # Redirect from http to https
+      - "traefik.http.middlewares.filebrowser-https-redirect.redirectscheme.scheme=https"
+  

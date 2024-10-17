@@ -1,0 +1,32 @@
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - socket_proxy
+      - traefik
+    # profiles: ["apps", "all"]  
+    # ports:
+    #   - 3000:3000
+    volumes:
+      - $IMAGE_PATH:/app/public/images
+      - $CONTAINER_PATH/homepage/config:/app/config 
+      #- "/var/run/docker.sock:/var/run/docker.sock:ro"
+    restart: unless-stopped
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+    labels:
+      - "traefik.enable=true"
+      # Service (app port)
+      - "traefik.http.services.homepage.loadbalancer.server.port=3000"
+      # Domain rule
+      - "traefik.http.routers.homepage.rule=Host(`homepage.$DOMAIN`)"
+      # Entrypoint
+      - "traefik.http.routers.homepage.entrypoints=websecure"
+      # Enable tls
+      - "traefik.http.routers.homepage.tls=true"
+      # Redirect from http to https
+      - "traefik.http.middlewares.homepage-https-redirect.redirectscheme.scheme=https"

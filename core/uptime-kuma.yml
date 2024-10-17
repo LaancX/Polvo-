@@ -1,0 +1,36 @@
+services:
+# Uptime-kuma - Monitors all the containers and services
+  uptime-kuma:
+    image: louislam/uptime-kuma:latest
+    container_name: uptime-kuma
+    volumes:
+      - $CONTAINER_PATH/uptime-kuma/data:/app/data
+      #- /var/run/docker.sock:/var/run/docker.sock
+    # profiles: ["core", "all"]
+    # ports:
+    #   - 3001:3001
+    networks:
+      - traefik
+      - socket_proxy
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      # Service (app port)
+      - "traefik.http.services.uptime-kuma.loadbalancer.server.port=3001"
+      # Domain rule
+      - "traefik.http.routers.uptime-kuma.rule=Host(`uptime-kuma.$DOMAIN`)"
+      # Entrypoint
+      - "traefik.http.routers.uptime-kuma.entrypoints=websecure"
+      # Enable tls
+      - "traefik.http.routers.uptime-kuma.tls=true"
+      # Redirect from http to https
+      - "traefik.http.middlewares.uptime-kuma-https-redirect.redirectscheme.scheme=https"
+      
+      # Homepage's
+      - homepage.group=Monitoring
+      - homepage.name=Uptime-kuma
+      - homepage.icon=$ICON_WEB/uptime-kuma.png
+      - homepage.href=https://uptime-kuma.$DOMAIN
+      - homepage.widget.type=uptimekuma
+      - homepage.widget.url=https://uptime-kuma.$DOMAIN
+      - homepage.widget.slug=polvo

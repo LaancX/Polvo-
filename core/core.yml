@@ -1,175 +1,82 @@
-version: '3.5'
-services:
-# Traefik - Reverse proxy FTW
-  traefik:
-    image: "traefik:v2.10"
-    container_name: "traefik"
-    restart: unless-stopped
-    environment:
-      - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
-      - CF_API_EMAIL=${EMAIL}
-    ports:
-      - "80:80"
-      - "8080:8080"
-      - "443:443"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "${CONTAINER_PATH}/traefik/letsencrypt/acme.json:/acme.json"
-      - "${CONTAINER_PATH}/traefik/config.yml:/config.yml:ro"
-      - "${CONTAINER_PATH}/traefik/traefik.yml:/traefik.yml:ro"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)" # && PathPrefix(`/traefik`)"
-      - "traefik.http.routers.traefik.entrypoints=web"
-                        #-------- Secure --------
-      - "traefik.http.routers.traefik-secure.entrypoints=websecure"
-      - "traefik.http.routers.traefik-secure.rule=Host(`traefik.${DOMAIN}`)"
-      - "traefik.http.routers.traefik-secure.tls=true"
-      - "traefik.http.routers.traefik-secure.tls.certresolver=cloudflare"
-      - "traefik.http.routers.traefik-secure.tls.domains[0].main=${DOMAIN}"
-      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.${DOMAIN}"
-      - "traefik.http.routers.traefik-secure.service=api@internal"
-      - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
-      # Homepage's
-      - homepage.group=Reverse Proxy
-      - homepage.name=Træfik
-      - homepage.icon=${ICON_WEB}/traefik.png
-      - homepage.href=https:${DOMAIN}:8080
-      - homepage.widget.type=traefik
-      - homepage.widget.url=https:${DOMAIN}:8080
 
-# Netdata - Monitoramento do servidor
-  netdata:
-    image: netdata/netdata
-    container_name: netdata
-    hostname: crapbook
-    pid: host
-    restart: unless-stopped
-    cap_add:
-      - SYS_PTRACE
-      - SYS_ADMIN
-    security_opt:
-      - apparmor:unconfined
-    volumes:
-      - ${CONTAINER_PATH}/netdata/config:/etc/netdata
-      - netdatalib:/var/lib/netdata
-      - netdatacache:/var/cache/netdata
-      - /etc/hostname:/etc/hostname:ro
-      - /etc/passwd:/host/etc/passwd:ro
-      - /etc/group:/host/etc/group:ro
-      - /etc/localtime:/etc/localtime:ro
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /etc/os-release:/host/etc/os-release:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.netdata.loadbalancer.server.port=19999"
-                              #-------- Secure --------
-      - "traefik.http.routers.netdata-secure.rule=Host(`netdata.${DOMAIN}`)"
-      - "traefik.http.routers.netdata-secure.entrypoints=websecure"
-      - "traefik.http.routers.netdata-secure.tls=true"
-      - "traefik.http.middlewares.netdata-https-redirect.redirectscheme.scheme=https"
-
-# What's up Docker? - Just like watchtower but cooler
-  whatsupdocker:
-    image: fmartinou/whats-up-docker
-    container_name: wud
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    # ports:
-    #   - 3000:3000
-    labels:
-      # Traefik's
-      - "traefik.enable=true"
-      - "traefik.http.services.whatsupdocker.loadbalancer.server.port=3000"
-                              #-------- Secure --------
-      - "traefik.http.routers.whatsupdocker-secure.rule=Host(`whatsupdocker.${DOMAIN}`)"
-      - "traefik.http.routers.whatsupdocker-secure.entrypoints=websecure"
-      - "traefik.http.routers.whatsupdocker-secure.tls=true"
-      - "traefik.http.middlewares.whatsupdocker-https-redirect.redirectscheme.scheme=https"
-      # Homepage's
-      - homepage.group=Updates
-      - homepage.name=What's up Docker
-      - homepage.icon=${ICON_WEB}/wud-light.png
-      - homepage.href=https://whatsupdocker.${DOMAIN}
-      - homepage.widget.type=whatsupdocker
-      - homepage.widget.url=https://whatsupdocker.${DOMAIN}
-
-# HomePage - Dashboard
-  homepage:
-    image: ghcr.io/gethomepage/homepage:latest
-    container_name: homepage
-    # ports:
-    #   - 3000:3000
-    volumes:
-      - ${IMAGE_PATH}:/app/public/images
-      - ${CONTAINER_PATH}/homepage/config:/app/config 
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-    restart: unless-stopped
-    labels:
-      # Traefik's
-      - "traefik.enable=true"
-      - "traefik.http.services.homepage.loadbalancer.server.port=3000"
-                              #-------- Secure --------
-      - "traefik.http.routers.homepage-secure.rule=Host(`homepage.${DOMAIN}`)"
-      - "traefik.http.routers.homepage-secure.entrypoints=websecure"
-      - "traefik.http.routers.homepage-secure.tls=true"
-      - "traefik.http.middlewares.homepage-https-redirect.redirectscheme.scheme=https"
-
-# Uptime-kuma - Playing ping pong with all the cool containers
-  uptime-kuma:
-    image: louislam/uptime-kuma:latest
-    container_name: uptime-kuma
-    volumes:
-      - ${CONTAINER_PATH}/uptime-kuma/data:/app/data
-      - /var/run/docker.sock:/var/run/docker.sock
-    # ports:
-    #   - 3001:3001
-    restart: unless-stopped
-    labels:
-      # Traefik's
-      - "traefik.enable=true"
-      - "traefik.http.services.uptime-kuma.loadbalancer.server.port=3001"
-                              #-------- Secure --------
-      - "traefik.http.routers.uptime-kuma-secure.rule=Host(`uptime-kuma.${DOMAIN}`)"                        
-      - "traefik.http.routers.uptime-kuma-secure.entrypoints=websecure"
-      - "traefik.http.routers.uptime-kuma-secure.tls=true"
-      - "traefik.http.middlewares.uptime-kuma-https-redirect.redirectscheme.scheme=https"
-      # Homepage's
-      - homepage.group=Monitoring
-      - homepage.name=Uptime-kuma
-      - homepage.icon=${ICON_WEB}/uptime-kuma.png
-      - homepage.href=https://uptime-kuma.${DOMAIN}
-      - homepage.widget.type=uptimekuma
-      - homepage.widget.url=https://uptime-kuma.${DOMAIN}
-      - homepage.widget.slug=polvo
-
-# Gotify - Outro app para receber notificações push
-  gotify:
-    image: gotify/server
-    container_name: gotify
-    # ports:
-    #   - "80:80"
-    volumes:
-      - ${CONTAINER_PATH}/gotify/data:/app/data
-    labels:
-      # Traefik's
-      - "traefik.enable=true"
-      - "traefik.http.services.gotify.loadbalancer.server.port=80"
-                              #-------- Secure --------
-      - "traefik.http.routers.gotify-secure.rule=Host(`gotify.${DOMAIN}`)"                        
-      - "traefik.http.routers.gotify-secure.entrypoints=websecure"
-      - "traefik.http.routers.gotify-secure.tls=true"
-      - "traefik.http.middlewares.gotify-https-redirect.redirectscheme.scheme=https"
-    restart: unless-stopped
-
+#### Networks ####
 networks:
   default:
-    external: true
+    driver: bridge
+  socket_proxy:
+    name: socket_proxy
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.91.0/24
+  traefik:
     name: traefik
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.90.0/24
+  nextcloud:
+    name: nextcloud
+    driver: bridge
 
+#### Volumes ####
 volumes:
   netdatalib:
   netdatacache:
+
+#### Secrets ####
+secrets:
+  cf_dns_api_token:
+    file: $SECRETS_PATH/cf_dns_api_token
+  plex_claim:
+    file: $SECRETS_PATH/plex_claim
+  db_password:
+    file: $SECRETS_PATH/db_password
+  db_root_password:
+    file: $SECRETS_PATH/db_root_password 
+  mysql_root_password:
+    file: $SECRETS_PATH/mysql_root_password 
+  basic_auth_credentials:
+    file: $SECRETS_PATH/basic_auth_credentials
+
+# Include core and media services
+include:
+  #### CORE ####
+  - $PROJECT_PATH/core/socket_proxy.yml
+  - $PROJECT_PATH/core/dozzle.yml
+  - $PROJECT_PATH/core/homepage.yml
+  - $PROJECT_PATH/core/gotify.yml
+  - $PROJECT_PATH/core/uptime-kuma.yml
+  - $PROJECT_PATH/core/traefik.yml
+
+### STATISTICS ####
+  - $PROJECT_PATH/media-stack/tautulli.yml
+  - $PROJECT_PATH/core/netdata.yml
+
+  #### DATABASES ####
+  - $PROJECT_PATH/core/mariadb.yml
+
+  #### MAINTENANCE ####
+  - $PROJECT_PATH/core/docker-gc.yml
+  - $PROJECT_PATH/core/wud.yml
+
+  #### Storage ####
+  - $PROJECT_PATH/core/nextcloud.yml 
+  - $PROJECT_PATH/core/filebrowser.yml
+
+  #### MEDIA ####
+  - $PROJECT_PATH/media-stack/plex.yml
+  - $PROJECT_PATH/media-stack/jellyfin.yml
+
+  #### DOWNLOADERS ####
+  - $PROJECT_PATH/media-stack/qbittorrent.yml
+
+  #### PROVIDERS ####
+  - $PROJECT_PATH/media-stack/radarr.yml
+  - $PROJECT_PATH/media-stack/sonarr.yml
+  - $PROJECT_PATH/media-stack/bazarr.yml
+  - $PROJECT_PATH/media-stack/prowlarr.yml
+  - $PROJECT_PATH/media-stack/overseerr.yml
+  - $PROJECT_PATH/media-stack/jellyseerr.yml
+
+  

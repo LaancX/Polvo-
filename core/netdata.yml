@@ -1,0 +1,44 @@
+services:
+# Netdata - Monitoramento do servidor
+  netdata:
+    image: netdata/netdata
+    container_name: netdata
+    hostname: crapbook
+    pid: host
+    restart: unless-stopped
+    networks:
+      - traefik
+      - socket_proxy
+    # ports:
+    #   - "19999:19999"
+    cap_add:
+      - SYS_PTRACE
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - $CONTAINER_PATH/netdata/config:/etc/netdata
+      - netdatalib:/var/lib/netdata
+      - netdatacache:/var/cache/netdata
+      - /etc/hostname:/etc/hostname:ro
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro
+      #- /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      DOCKER_HOST: tcp://socket-proxy:2375
+    labels:
+      - "traefik.enable=true"
+      # Service (app port)
+      - "traefik.http.services.netdata.loadbalancer.server.port=19999"
+      # Domain rule
+      - "traefik.http.routers.netdata.rule=Host(`netdata.$DOMAIN`)"
+      # Entrypoint
+      - "traefik.http.routers.netdata.entrypoints=websecure"
+      # Enable tls
+      - "traefik.http.routers.netdata.tls=true"
+      # Redirect from http to https
+      - "traefik.http.middlewares.netdata-https-redirect.redirectscheme.scheme=https"

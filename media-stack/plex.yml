@@ -1,0 +1,46 @@
+services:
+  # Jellyfin but proprietary, but with a cooler UI
+  plex:
+    container_name: plex
+    image: plexinc/pms-docker:latest
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    # ports:
+    #   - 32400:32400/tcp   # access to the Plex Media Server) [required]
+    #   - 8324:8324/tcp     # controlling Plex for Roku via Plex Companion
+    #   - 32469:32469/tcp   # access to the Plex DLNA Server
+    #   - 1900:1900/udp     # access to the Plex DLNA Server
+    #   - 32410:32410/udp   # current GDM network discovery
+    #   - 32412:32412/udp   # current GDM network discovery
+    #   - 32413:32413/udp   # current GDM network discovery
+    #   - 32414:32414/udp   # current GDM network discovery
+    # profiles: ["media", "all"]
+    environment:
+      TZ: $TZ
+      PLEX_CLAIM_FILE: /run/secrets/plex_claim
+      ADVERTISE_IP: "https://plex.hackerboy.xyz:443"
+      PLEX_UID: $PUID
+      PLEX_GID: $PGID
+    secrets:
+      - plex_claim
+    hostname: plexserver
+    volumes:
+      - $CONTAINER_PATH/plex/database:/config
+      - $CONTAINER_PATH/plex/temp:/transcode
+      - $DATA_PATH:/data
+      - /dev/shm:/data/transcode # Offload transcoding to RAM if you have enough RAM
+    labels:
+      - "traefik.enable=true"
+      # Service (app port)
+      - "traefik.http.services.plex.loadbalancer.server.port=32400"
+      # Domain rule
+      - "traefik.http.routers.plex.rule=Host(`plex.$DOMAIN`)"
+      # Entrypoint
+      - "traefik.http.routers.plex.entrypoints=websecure"
+      # Enable tls
+      - "traefik.http.routers.plex.tls=true"
+      # Redirect from http to https
+      - "traefik.http.middlewares.plex-https-redirect.redirectscheme.scheme=https"

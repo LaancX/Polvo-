@@ -1,0 +1,48 @@
+services:
+  # Qbittorrent - We all know what it is
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    # profiles: ["apps", "downloads", "all"]  
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+      UMASK_SET: 002
+      #- WEBUI_PORT=8080
+    volumes:
+      - $CONTAINER_PATH/qbittorrent/config:/config
+      - $DATA_PATH/torrents:/data/torrents
+    networks:
+      - traefik
+    # ports:
+    #   - 9090:8080
+    #   - 6881:6881
+    #   - 6881:6881/udp
+    labels:
+      - "traefik.enable=true"
+      # Service (app port)
+      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
+      # Domain rule
+      - "traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.$DOMAIN`)"
+      # Entrypoint
+      - "traefik.http.routers.qbittorrent.entrypoints=websecure"
+      # Enable tls
+      - "traefik.http.routers.qbittorrent.tls=true"
+      # Redirect from http to https
+      - "traefik.http.middlewares.qbittorrent-https-redirect.redirectscheme.scheme=https"
+      
+      # Homepage's
+      - homepage.group=Downloads
+      - homepage.name=qBittorrent
+      - homepage.icon=$ICON_WEB/qbittorrent.png
+      - homepage.href=https://qbittorrent.$DOMAIN
+      - homepage.widget.type=qbittorrent
+      - homepage.widget.url=https://qbittorrent.$DOMAIN
+      - homepage.widget.username=$QBIT_USERNAME
+      - homepage.widget.password=$QBIT_PASSWORD

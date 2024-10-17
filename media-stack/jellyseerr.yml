@@ -1,0 +1,39 @@
+services:
+  # Jellyseerr - Manages requests for the media library
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=$TZ
+    # ports:
+    # - 5055:5055
+    # profiles: ["media", "arrs", "all"]
+    volumes:
+      - $CONTAINER_PATH/jellyseerr/config:/app/config
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      # Service (app port)
+      - "traefik.http.services.jellyseerr.loadbalancer.server.port=5055"
+      # Domain rule
+      - "traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.$DOMAIN`)"
+      # Entrypoint
+      - "traefik.http.routers.jellyseerr.entrypoints=websecure"
+      # Enable tls
+      - "traefik.http.routers.jellyseerr.tls=true"
+      # Redirect from http to https
+      - "traefik.http.middlewares.jellyseerr-https-redirect.redirectscheme.scheme=https"
+      
+      # Homepage's
+      - homepage.group=Media
+      - homepage.name=Jellyseerr
+      - homepage.icon=$ICON_WEB/jellyseerr.png
+      - homepage.href=https://jellyseerr.$DOMAIN
+      - homepage.widget.type=jellyseerr
+      - homepage.widget.url=https://jellyseerr.$DOMAIN
+      - homepage.widget.key=$JELLYSEERR_KEY

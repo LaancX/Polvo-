@@ -1,0 +1,43 @@
+services:
+  # Bazarr - Manages and downloads subtitles based on my requirements
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+    # profiles: ["media", "arrs", "all"]
+    networks:
+      - traefik 
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+    volumes:
+      - $CONTAINER_PATH/bazarr/config:/config
+      - $DATA_PATH/media:/data/media
+      - /etc/localtime:/etc/localtime:ro
+    # ports:
+    #   - 6767:6767
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      # Service (app port)
+      - "traefik.http.services.bazarr.loadbalancer.server.port=6767"
+      # Domain rule
+      - "traefik.http.routers.bazarr.rule=Host(`bazarr.$DOMAIN`)"
+      # Entrypoint
+      - "traefik.http.routers.bazarr.entrypoints=websecure"
+      # Enable tls
+      - "traefik.http.routers.bazarr.tls=true"
+      # Redirect from http to https
+      - "traefik.http.middlewares.bazarr-https-redirect.redirectscheme.scheme=https"
+      # Homepage's
+      - homepage.group=Workers
+      - homepage.name=Bazarr
+      - homepage.icon=$ICON_WEB/bazarr-light.png
+      - homepage.href=https://bazarr.$DOMAIN
+      - homepage.widget.type=bazarr
+      - homepage.widget.url=https://bazarr.$DOMAIN
+      - homepage.widget.key=$BAZARR_KEY

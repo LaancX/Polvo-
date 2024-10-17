@@ -1,0 +1,26 @@
+services:
+  # Gotify - Push notifications
+  gotify:
+    image: gotify/server
+    container_name: gotify
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    networks:
+      - traefik
+    # ports:
+    #   - "80:80"
+    volumes:
+      - $CONTAINER_PATH/gotify/data:/app/data
+    labels:
+      - "traefik.enable=true"
+      # Service (app port)
+      - "traefik.http.services.gotify.loadbalancer.server.port=80"
+      # Domain rule
+      - "traefik.http.routers.gotify.rule=Host(`gotify.$DOMAIN`)"
+      # Entrypoint
+      - "traefik.http.routers.gotify.entrypoints=websecure"
+      # Enable tls
+      - "traefik.http.routers.gotify.tls=true"
+      # Redirect from http to https
+      - "traefik.http.middlewares.gotify-https-redirect.redirectscheme.scheme=https"

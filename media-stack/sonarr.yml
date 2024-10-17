@@ -1,0 +1,48 @@
+services:
+  # Sonarr - Automatically download TV Shows via Usenet and the qBittorrent
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+    networks:
+      - traefik
+    # profiles: ["media", "arrs", "all"]
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+    volumes:
+      - $CONTAINER_PATH/sonarr/config:/config
+      - $DATA_PATH/media/tv:/data/tv
+      - $DATA_PATH/media2/tv:/data/tv2
+      - $DATA_PATH/media/anime:/data/anime
+      - $DATA_PATH/media/torrents:/data/downloads
+      - "/etc/localtime:/etc/localtime:ro"
+    # ports:
+    #   - 8989:8989
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      # Service (app port)
+      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
+      # Domain rule
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.$DOMAIN`)"
+      # Entrypoint
+      - "traefik.http.routers.sonarr.entrypoints=websecure"
+      # Enable tls
+      - "traefik.http.routers.sonarr.tls=true"
+      # Redirect from http to https
+      - "traefik.http.middlewares.sonarr-https-redirect.redirectscheme.scheme=https"
+      
+      # Homepage's
+      - homepage.group=Workers
+      - homepage.name=Sonarr
+      - homepage.icon=$ICON_WEB/sonarr.png
+      - homepage.href=https://sonarr.$DOMAIN
+      - homepage.widget.type=sonarr
+      - homepage.widget.url=https://sonarr.$DOMAIN
+      - homepage.widget.key=$SONARR_KEY
+      - homepage.widget.enableQueue=true

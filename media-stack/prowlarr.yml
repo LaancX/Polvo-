@@ -1,0 +1,41 @@
+services:
+# Prowlarr - Gives the indexers to the arrs services
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+    networks:
+      - traefik
+    environment:
+      - PUID=1000
+      - GUID=1000
+      - TZ=$TZ
+    volumes:
+      - $CONTAINER_PATH/prowlarr/config:/config
+    # ports:
+    #   - 9696:9696
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      # Service (app port)
+      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
+      # Domain rule
+      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.$DOMAIN`)"
+      # Entrypoint
+      - "traefik.http.routers.prowlarr.entrypoints=websecure"
+      # Enable tls
+      - "traefik.http.routers.prowlarr.tls=true"
+      # Redirect from http to https
+      - "traefik.http.middlewares.prowlarr-https-redirect.redirectscheme.scheme=https"
+      
+      # Homepage's
+      - homepage.group=Workers
+      - homepage.name=Prowlarr
+      - homepage.icon=$ICON_WEB/prowlarr.png
+      - homepage.href=https://prowlarr.$DOMAIN
+      - homepage.widget.type=prowlarr
+      - homepage.widget.url=https://prowlarr.$DOMAIN
+      - homepage.widget.key=$PROWLARR_KEY

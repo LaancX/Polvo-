@@ -1,0 +1,32 @@
+services:
+  # Tautulli - Monitor, view analytics, and receive notifications about Plex Media Server
+  tautulli:
+    image: lscr.io/linuxserver/tautulli:latest
+    container_name: tautulli
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    # profiles: ["media", "all"]
+    networks:
+      - traefik
+    volumes:
+      - $CONTAINER_PATH/tautulli/config:/config
+      - $CONTAINER_PATH/plex/database/Library/Application Support/Plex Media Server/logs:/logs:ro # For Tautulli Plex log viewer
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+    # ports:
+    #   - 8181:8181
+    labels:
+      - "traefik.enable=true"
+      # Service (app port)
+      - "traefik.http.services.tautulli.loadbalancer.server.port=8181"
+      # Domain rule
+      - "traefik.http.routers.tautulli.rule=Host(`tautulli.$DOMAIN`)"
+      # Entrypoint
+      - "traefik.http.routers.tautulli.entrypoints=websecure"
+      # Enable tls
+      - "traefik.http.routers.tautulli.tls=true"
+      # Redirect from http to https
+      - "traefik.http.middlewares.tautulli-https-redirect.redirectscheme.scheme=https"

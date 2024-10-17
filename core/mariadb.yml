@@ -1,0 +1,35 @@
+services:
+  # MariaDB - MySQL Database
+  # After starting container for first time dexec and mysqladmin -u root password <password>
+  mariadb:
+    container_name: mariadb
+    image: lscr.io/linuxserver/mariadb
+    networks:
+      - traefik
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    # profiles: ["dbs", "all"]
+    # ports:
+    #   - "3306:3306"
+    volumes:
+      - $CONTAINER_PATH/mariadb/data:/config
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+      FILE__MYSQL_ROOT_PASSWORD: /run/secrets/mysql_root_password # Note FILE__ (double underscore) 
+    secrets:
+      - mysql_root_password
+    labels:
+      - "traefik.enable=true"
+      # Service (app port)
+      - "traefik.http.services.mariadb.loadbalancer.server.port=3306"
+      # Domain rule
+      - "traefik.http.routers.mariadb.rule=Host(`mariadb.$DOMAIN`)"
+      # Entrypoint
+      - "traefik.http.routers.mariadb.entrypoints=websecure"
+      # Enable tls
+      - "traefik.http.routers.mariadb.tls=true"
+      # Redirect from http to https
+      - "traefik.http.middlewares.mariadb-https-redirect.redirectscheme.scheme=https"

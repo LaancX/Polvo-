@@ -1,0 +1,56 @@
+services:
+  # Docker-GC - Automatic Docker Garbage Collection
+  # Create docker-gc-exclude file
+  docker-gc:
+    image: clockworksoul/docker-gc-cron:latest
+    container_name: docker-gc
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    # profiles: ["apps", "all"]
+    networks:
+      - socket_proxy
+      - traefik
+    volumes:
+      # - /var/run/docker.sock:/var/run/docker.sock # Use Docker Socket Proxy instead for improved security
+      - $CONTAINER_PATH/docker-gc/appdata/docker-gc-exclude:/etc/docker-gc-exclude
+    environment:
+      CRON: 0 23 0 * * ? # Every day at eleven
+
+      # By default, docker will not remove an image if it is tagged in multiple repositories. If
+      # you have a server running docker where this is the case, for example in CI environments 
+      # where dockers are being built, re-tagged, and pushed, you can set this flag to 1 to override.
+      FORCE_IMAGE_REMOVAL: 1
+
+      # By default, if an error is encountered when cleaning up a container, Docker will report the
+      # error back and leave it on disk. This can sometimes lead to containers accumulating. If
+      # you run into this issue, you can force the removal of the container by setting this flag.
+      FORCE_CONTAINER_REMOVAL: 0
+
+      # By default, docker-gc will not remove a container if it exited less than 1 hour ago.
+      # Set the GRACE_PERIOD_SECONDS variable to override this default.
+      GRACE_PERIOD_SECONDS: 604800
+
+      # By default, docker-gc will proceed with deletion of containers and images. To test your
+      # settings set the DRY_RUN variable to override this default
+      DRY_RUN: 0
+
+      # By default, this process will leave any dangling volumes untouched. To instruct the
+      # process to automatically clean up any dangling volumes, simply set this value to 1.
+      CLEAN_UP_VOLUMES: 1
+
+      # Time zone
+      TZ: $TZ
+      DOCKER_HOST: tcp://socket-proxy:2375
+    labels:
+      - "traefik.enable=true"
+      # Service (app port)
+      #- "traefik.http.services.docker-gc.loadbalancer.server.port=19999"
+      # Domain rule
+      - "traefik.http.routers.docker-gc.rule=Host(`docker-gc.$DOMAIN`)"
+      # Entrypoint
+      - "traefik.http.routers.docker-gc.entrypoints=websecure"
+      # Enable tls
+      - "traefik.http.routers.docker-gc.tls=true"
+      # Redirect from http to https
+      - "traefik.http.middlewares.docker-gc-https-redirect.redirectscheme.scheme=https"

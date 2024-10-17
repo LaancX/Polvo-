@@ -1,0 +1,65 @@
+services:
+# Google drive but cooler, its FOSS
+  nextcloud:
+    image: nextcloud:21
+    container_name: nextcloud
+    hostname: nextcloud
+    restart: unless-stopped
+    # ports:
+    #   - 7070:80
+    networks:
+      - nextcloud
+      - traefik
+    volumes:
+      - $CONTAINER_PATH/nextcloud/config:/var/www/html
+    environment:
+      REDIS_HOST: nc-redis
+      NEXTCLOUD_TRUSTED_DOMAIN: nextcloud.$DOMAIN
+      TRUSTED_PROXIES: 172.22.0.0/16
+    labels:
+      - "traefik.enable=true"
+      # Service (app port)
+      - "traefik.http.services.nextcloud.loadbalancer.server.port=80"
+      # Domain rule
+      - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.$DOMAIN`)"
+      # Entrypoint
+      - "traefik.http.routers.nextcloud.entrypoints=websecure"
+      # Enable tls
+      - "traefik.http.routers.nextcloud.tls=true"
+      # Redirect from http to https
+      - "traefik.http.middlewares.nextcloud-https-redirect.redirectscheme.scheme=https"
+
+# Nextcloud Database
+  nextcloud-db:
+    image: mariadb:10.5
+    container_name: nc-db
+    hostname: nc-db
+    restart: unless-stopped
+    # Recommended database settings as listed in:
+    # https://docs.nextcloud.com/server/21/admin_manual/configuration_database/linux_database_configuration.html
+    command: --transaction-isolation=READ-COMMITTED --log-bin=msqyld-bin --binlog-format=ROW
+    networks:
+      - nextcloud
+    volumes:
+      # I like to use the /opt folder to hold my Docker bind mounted volumes
+      - ${CONTAINER_PATH}/mariadb/config:/var/lib/mysql
+    secrets:
+      - db_root_password
+      - db_password
+    # Environment (internal to the container) variables to simplify setup (notice the secrets used below)
+    environment:
+      MYSQL_USER: nextcloud
+      MYSQL_DATABASE: nextcloud
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+
+# Speeds up Nextcloud by reducing the time spent "looking" for things
+  nc-redis:
+    image: redis:6.2-alpine
+    container_name: nc-redis
+    hostname: nc-redis
+    restart: unless-stopped
+    networks:
+      - nextcloud
+    volumes:
+      - ${CONTAINER_PATH}/redis/config:/data   

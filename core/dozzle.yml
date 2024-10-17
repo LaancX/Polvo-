@@ -1,0 +1,35 @@
+services:
+  # Dozzle - Real-time Docker Log Viewer
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    security_opt:
+      - no-new-privileges:true
+    # profiles: ["apps", "all"]  
+    restart: unless-stopped
+    # profiles: ["apps", "all"]
+    networks:
+      - socket_proxy
+      - traefik
+    # ports:
+    #   - "8082:8080"
+    environment:
+      DOZZLE_LEVEL: info
+      DOZZLE_TAILSIZE: 300
+      DOZZLE_FILTER: "status=running"
+      # DOZZLE_FILTER: "label=log_me" # limits logs displayed to containers with this label
+      DOCKER_HOST: tcp://socket-proxy:2375
+    # volumes:
+    #  - /var/run/docker.sock:/var/run/docker.sock # Use Docker Socket Proxy instead for improved security
+    labels:
+      - "traefik.enable=true"
+      # Service (app port)
+      - "traefik.http.services.dozzle.loadbalancer.server.port=8080"
+      # Domain rule
+      - "traefik.http.routers.dozzle.rule=Host(`dozzle.$DOMAIN`)"
+      # Entrypoint
+      - "traefik.http.routers.dozzle.entrypoints=websecure"
+      # Enable tls
+      - "traefik.http.routers.dozzle.tls=true"
+      # Redirect from http to https
+      - "traefik.http.middlewares.dozzle-https-redirect.redirectscheme.scheme=https"

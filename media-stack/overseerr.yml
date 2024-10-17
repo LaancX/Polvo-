@@ -1,0 +1,31 @@
+services:
+  # Overseerr - Helps to find media you want to watch
+  overseerr:
+    image: sctx/overseerr:latest
+    container_name: overseerr
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=$TZ
+      # - PORT=5055 #optional
+    # ports:
+    #   - 5055:5055
+    # profiles: ["media", "arrs", "all"]
+    volumes:
+      - $DATA_PATH/overseerr/config:/app/config
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      # Service (app port)
+      - "traefik.http.services.overseerr.loadbalancer.server.port=5055"
+      # Domain rule
+      - "traefik.http.routers.overseerr.rule=Host(`overseerr.$DOMAIN`)"
+      # Entrypoint
+      - "traefik.http.routers.overseerr.entrypoints=websecure"
+      # Enable tls
+      - "traefik.http.routers.overseerr.tls=true"
+      # Redirect from http to https
+      - "traefik.http.middlewares.overseerr-https-redirect.redirectscheme.scheme=https"
