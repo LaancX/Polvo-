@@ -1,0 +1,27 @@
+services:
+  hrconvert2:
+    image: dwaaan/hrconvert2-docker:latest
+    container_name: hrconvert2
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - socket_proxy
+      - traefik
+    # profiles: ["apps", "all"]
+    # ports:
+    #   - 8085:80
+    volumes:
+      - $CONTAINER_PATH/hrconvert2/config.php:/var/www/html/HRProprietary/HRConvert2/config.php
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      # Service (app port)
+      - "traefik.http.services.hrconvert2.loadbalancer.server.port=80"
+      # Domain rule
+      - "traefik.http.routers.hrconvert2.rule=Host(`hrconvert2.$DOMAIN`)"
+      # Entrypoint
+      - "traefik.http.routers.hrconvert2.entrypoints=websecure"
+      # Enable tls
+      - "traefik.http.routers.hrconvert2.tls=true"
+      # Redirect from http to https
+      - "traefik.http.middlewares.hrconvert2-https-redirect.redirectscheme.scheme=https"

@@ -10,7 +10,7 @@ services:
     # profiles: ["apps", "all"]
     networks:
       - socket_proxy
-      - traefik
+      # - traefik
     volumes:
       # - /var/run/docker.sock:/var/run/docker.sock # Use Docker Socket Proxy instead for improved security
       - $CONTAINER_PATH/docker-gc/appdata/docker-gc-exclude:/etc/docker-gc-exclude
@@ -42,15 +42,15 @@ services:
       # Time zone
       TZ: $TZ
       DOCKER_HOST: tcp://socket-proxy:2375
-    labels:
-      - "traefik.enable=true"
-      # Service (app port)
-      #- "traefik.http.services.docker-gc.loadbalancer.server.port=19999"
-      # Domain rule
-      - "traefik.http.routers.docker-gc.rule=Host(`docker-gc.$DOMAIN`)"
-      # Entrypoint
-      - "traefik.http.routers.docker-gc.entrypoints=websecure"
-      # Enable tls
-      - "traefik.http.routers.docker-gc.tls=true"
-      # Redirect from http to https
-      - "traefik.http.middlewares.docker-gc-https-redirect.redirectscheme.scheme=https"
+    # labels:
+    #   - "traefik.enable=true"
+    #   # Service (app port)
+    #   #- "traefik.http.services.docker-gc.loadbalancer.server.port=19999"
+    #   # Domain rule
+    #   - "traefik.http.routers.docker-gc.rule=Host(`docker-gc.$DOMAIN`)"
+    #   # Entrypoint
+    #   - "traefik.http.routers.docker-gc.entrypoints=websecure"
+    #   # Enable tls
+    #   - "traefik.http.routers.docker-gc.tls=true"
+    #   # Redirect from http to https
+    #   - "traefik.http.middlewares.docker-gc-https-redirect.redirectscheme.scheme=https"

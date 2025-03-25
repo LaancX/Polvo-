@@ -9,6 +9,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - traefik
+      - socket_proxy
     # ports:
     #   - 3000:3000
     environment:

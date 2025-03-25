@@ -1,0 +1,27 @@
+version: '3'
+services:
+  jdownloader-2:
+    image: jlesage/jdownloader-2
+    container_name: jdownloader2
+    security_opt:
+      - no-new-privileges:true
+    # profiles: ["apps", "all"] 
+    # ports:
+    #   - "5800:5800"
+    networks:
+      - traefik
+    volumes:
+      - $CONTAINER_PATH/jdownloader-2/config:/config:rw
+      - $DATA_PATH/downloads:/output:rw
+    labels:
+      - "traefik.enable=true"
+      # Service (app port)
+      - "traefik.http.services.jdownloader2.loadbalancer.server.port=5800"
+      # Domain rule
+      - "traefik.http.routers.jdownloader2.rule=Host(`jdownloader2.$DOMAIN`)"
+      # Entrypoint
+      - "traefik.http.routers.jdownloader2.entrypoints=websecure"
+      # Enable tls
+      - "traefik.http.routers.jdownloader2.tls=true"
+      # Redirect from http to https
+      - "traefik.http.middlewares.jdownloader2-https-redirect.redirectscheme.scheme=https"

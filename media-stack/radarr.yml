@@ -2,7 +2,7 @@ services:
 # Radarr - Automatically download movies via Usenet and the qBittorrent
   radarr:
     container_name: radarr
-    image: cr.hotio.dev/hotio/radarr:latest
+    image: linuxserver/radarr:latest
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -21,7 +21,7 @@ services:
       - $CONTAINER_PATH/radarr/config:/config
       - $DATA_PATH/media/movies:/data/movies1
       - $DATA_PATH/media2/movies:/data/movies2
-      - $DATA_PATH/media/torrents:/data/downloads
+      - $DATA_PATH/downloads:/downloads
       - "/etc/localtime:/etc/localtime:ro"
     labels:
       - "traefik.enable=true"

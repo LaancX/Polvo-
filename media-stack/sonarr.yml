@@ -19,7 +19,7 @@ services:
       - $DATA_PATH/media/tv:/data/tv
       - $DATA_PATH/media2/tv:/data/tv2
       - $DATA_PATH/media/anime:/data/anime
-      - $DATA_PATH/media/torrents:/data/downloads
+      - $DATA_PATH/downloads:/downloads
       - "/etc/localtime:/etc/localtime:ro"
     # ports:
     #   - 8989:8989

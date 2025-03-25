@@ -33,3 +33,5 @@ services:
       - "traefik.http.routers.dozzle.tls=true"
       # Redirect from http to https
       - "traefik.http.middlewares.dozzle-https-redirect.redirectscheme.scheme=https"
+      # Basic auth
+      # - "traefik.http.routers.dozzle.middlewares=middlewares-basic-auth@file"

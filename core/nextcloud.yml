@@ -1,21 +1,25 @@
 services:
-# Google drive but cooler, its FOSS
+# Google drive but cooler
   nextcloud:
-    image: nextcloud:21
+    image: nextcloud:30.0.1   #21
     container_name: nextcloud
     hostname: nextcloud
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     # ports:
     #   - 7070:80
     networks:
       - nextcloud
       - traefik
     volumes:
-      - $CONTAINER_PATH/nextcloud/config:/var/www/html
+      # - $CONTAINER_PATH/nextcloud/config:/var/www/html
+      - $HOME_SERVER_PATH/nextcloud/:/var/www/html
+      # - $HOME_SERVER_PATH/nextcloud/data:/var/www/html/nextcloud/data
     environment:
       REDIS_HOST: nc-redis
-      NEXTCLOUD_TRUSTED_DOMAIN: nextcloud.$DOMAIN
-      TRUSTED_PROXIES: 172.22.0.0/16
+      NEXTCLOUD_TRUSTED_DOMAIN: https://nextcloud.$DOMAIN
+      # TRUSTED_PROXIES: 172.22.0.0/16
     labels:
       - "traefik.enable=true"
       # Service (app port)
@@ -28,10 +32,12 @@ services:
       - "traefik.http.routers.nextcloud.tls=true"
       # Redirect from http to https
       - "traefik.http.middlewares.nextcloud-https-redirect.redirectscheme.scheme=https"
+      # Security headers
+      - "traefik.http.routers.nextcloud.middlewares=nextcloud-chain@file"
 
 # Nextcloud Database
   nextcloud-db:
-    image: mariadb:10.5
+    image: mariadb:11.5.2   #10.5
     container_name: nc-db
     hostname: nc-db
     restart: unless-stopped
@@ -41,8 +47,7 @@ services:
     networks:
       - nextcloud
     volumes:
-      # I like to use the /opt folder to hold my Docker bind mounted volumes
-      - ${CONTAINER_PATH}/mariadb/config:/var/lib/mysql
+      - ${CONTAINER_PATH}/mariadb-nextcloud/config:/var/lib/mysql
     secrets:
       - db_root_password
       - db_password
@@ -62,4 +67,4 @@ services:
     networks:
       - nextcloud
     volumes:
-      - ${CONTAINER_PATH}/redis/config:/data   
+      - ${CONTAINER_PATH}/redis-nextcloud/config:/data   

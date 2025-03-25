@@ -12,7 +12,7 @@ services:
     # ports:
     #   - "81:80"
     volumes:
-      - $MNT_PATH:/srv
+      - $HOME_SERVER_PATH:/srv
       - $CONTAINER_PATH/filebrowser/config:/config
     environment:
       TZ: $TZ

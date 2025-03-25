@@ -70,6 +70,7 @@ include:
 
   #### DOWNLOADERS ####
   - $PROJECT_PATH/media-stack/qbittorrent.yml
+  - $PROJECT_PATH/core/jdownloader2.yml
 
   #### PROVIDERS ####
   - $PROJECT_PATH/media-stack/radarr.yml
@@ -79,4 +80,5 @@ include:
   - $PROJECT_PATH/media-stack/overseerr.yml
   - $PROJECT_PATH/media-stack/jellyseerr.yml
 
-  
+    #### TOOLS ####
+  - $PROJECT_PATH/core/hrconvert2.yml 
