@@ -1,7 +1,8 @@
 services:
 # Google drive but cooler
   nextcloud:
-    image: nextcloud:30.0.1   #21
+    image: nextcloud:latest
+    # image: nextcloud:30.0.1   #21
     container_name: nextcloud
     hostname: nextcloud
     restart: unless-stopped

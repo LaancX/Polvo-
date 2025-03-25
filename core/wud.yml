@@ -14,7 +14,9 @@ services:
     # ports:
     #   - 3000:3000
     environment:
-      - TZ=$TZ
+      TZ: $TZ
+      DOCKER_HOST: tcp://socket-proxy:2375
+      
     labels:
       - "traefik.enable=true"
       # Service (app port)

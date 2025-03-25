@@ -36,4 +36,3 @@ services:
       - homepage.widget.slug=polvo
 
       # WUD
-      - 
