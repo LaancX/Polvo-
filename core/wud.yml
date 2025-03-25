@@ -1,12 +1,13 @@
 services:
   # What's up Docker? - Just like watchtower but cooler
   whatsupdocker:
-    image: fmartinou/whats-up-docker
+    image: getwud/wud
     container_name: wud
     security_opt:
       - no-new-privileges:true
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+    # volumes:
+    #   - /var/run/docker.sock:/var/run/docker.sock
+    # profiles: ["core", "all"]
     networks:
       - traefik
       - socket_proxy

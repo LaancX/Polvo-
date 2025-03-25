@@ -34,3 +34,6 @@ services:
       - homepage.widget.type=uptimekuma
       - homepage.widget.url=https://uptime-kuma.$DOMAIN
       - homepage.widget.slug=polvo
+
+      # WUD
+      - 
