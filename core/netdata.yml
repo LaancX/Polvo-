@@ -3,7 +3,7 @@ services:
   netdata:
     image: netdata/netdata
     container_name: netdata
-    hostname: crapbook
+    hostname: polvo
     pid: host
     restart: unless-stopped
     networks:

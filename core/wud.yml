@@ -16,6 +16,12 @@ services:
     environment:
       TZ: $TZ
       DOCKER_HOST: tcp://socket-proxy:2375
+      WUD_AUTH_ADMIN_USER: rafa
+      WUD_AUTH_ADMIN_PASSWORD__FILE: /run/secrets/wud_admin_password
+    volumes:
+      - $CONTAINER_PATH/wud/store:/store
+    secrets:
+      - wud_admin_password
       
     labels:
       - "traefik.enable=true"

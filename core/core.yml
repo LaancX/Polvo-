@@ -28,8 +28,8 @@ volumes:
 secrets:
   cf_dns_api_token:
     file: $SECRETS_PATH/cf_dns_api_token
-  plex_claim:
-    file: $SECRETS_PATH/plex_claim
+  # plex_claim:   # removido na migracao (2026-11)
+    # file: $SECRETS_PATH/plex_claim
   db_password:
     file: $SECRETS_PATH/db_password
   db_root_password:
@@ -38,26 +38,28 @@ secrets:
     file: $SECRETS_PATH/mysql_root_password 
   basic_auth_credentials:
     file: $SECRETS_PATH/basic_auth_credentials
+  wud_admin_password:
+    file: $SECRETS_PATH/wud_admin_password
 
 # Include core and media services
 include:
   #### CORE ####
   - $PROJECT_PATH/core/socket_proxy.yml
   - $PROJECT_PATH/core/dozzle.yml
-  - $PROJECT_PATH/core/homepage.yml
+  # - $PROJECT_PATH/core/homepage.yml   # removido na migracao (2026-11)
   - $PROJECT_PATH/core/gotify.yml
   - $PROJECT_PATH/core/uptime-kuma.yml
   - $PROJECT_PATH/core/traefik.yml
 
 ### STATISTICS ####
-  - $PROJECT_PATH/media-stack/tautulli.yml
+  # - $PROJECT_PATH/media-stack/tautulli.yml   # removido na migracao (2026-11)
   - $PROJECT_PATH/core/netdata.yml
 
   #### DATABASES ####
-  - $PROJECT_PATH/core/mariadb.yml
+  # - $PROJECT_PATH/core/mariadb.yml   # removido na migracao (2026-11)
 
   #### MAINTENANCE ####
-  - $PROJECT_PATH/core/docker-gc.yml
+  # - $PROJECT_PATH/core/docker-gc.yml   # removido na migracao (2026-11)
   - $PROJECT_PATH/core/wud.yml
 
   #### Storage ####
@@ -65,7 +67,7 @@ include:
   - $PROJECT_PATH/core/filebrowser.yml
 
   #### MEDIA ####
-  - $PROJECT_PATH/media-stack/plex.yml
+  # - $PROJECT_PATH/media-stack/plex.yml   # removido na migracao (2026-11)
   - $PROJECT_PATH/media-stack/jellyfin.yml
 
   #### DOWNLOADERS ####
@@ -77,7 +79,7 @@ include:
   - $PROJECT_PATH/media-stack/sonarr.yml
   - $PROJECT_PATH/media-stack/bazarr.yml
   - $PROJECT_PATH/media-stack/prowlarr.yml
-  - $PROJECT_PATH/media-stack/overseerr.yml
+  # - $PROJECT_PATH/media-stack/overseerr.yml   # removido na migracao (2026-11)
   - $PROJECT_PATH/media-stack/jellyseerr.yml
 
     #### TOOLS ####
