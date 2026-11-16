@@ -248,16 +248,18 @@ No meu HDD que está montado no diretório /mnt/home-server; eu tenho a pasta /d
 ```sudo chown -R $USER:$USER /containers && sudo chown -R $USER:$USER /data```</br>
 ```sudo chmod -R a=,a+rX,u+w,g+w /containers && sudo chmod -R a=,a+rX,u+w,g+w /data ```
 
-4. Criar a rede (neste caso a minha se chama traefik).
+4. Criar os arquivos de segredos
 
-```docker network create traefik```
+O `core/core.yml` lê alguns segredos de arquivos na pasta `secrets/` (que é ignorada pelo git). Crie cada arquivo referenciado na seção `secrets:` do `core.yml` (por exemplo `cf_dns_api_token`, `db_password`, `db_root_password`, `basic_auth_credentials`), um valor por arquivo, com `chmod 600`.
 
-A rede criada por padrão é do tipo "bridge". Entenda mais [aqui.](https://docs.docker.com/network/drivers/bridge/)
+Não é preciso criar as redes à mão: o `core.yml` já cria as redes `traefik`, `socket_proxy` e `nextcloud` (do tipo "bridge", entenda mais [aqui](https://docs.docker.com/network/drivers/bridge/)). Se a rede `traefik` já tiver sido criada com `docker network create`, o Compose avisa que ela não foi criada por ele (versões antigas do Compose davam erro); nesse caso, apague-a com `docker network rm traefik` antes do primeiro `up`.
 
 5. Subir os contêineres
-Após a organização das pastas você terá que executar: 
+Após a organização das pastas, execute (com o seu usuário, não com `sudo`, porque os caminhos do `.env` usam `$HOME`):
 
-```docker compose up -f core.yml -d && docker compose -f media-stack.yml -d```
+```cd Polvo-/core && docker compose -f core.yml up -d```
+
+O `core.yml` inclui (via `include`) os arquivos de `core/` e `media-stack/`, então esse único comando sobe todo o stack. Para não subir algum serviço, comente a linha dele no `include`.
 
 Obs: Provavelmente algumas informações aparecerão quando este comando for executado, como algumas variáveis não declaradas. No meu arquivo de .env existem algumas variáveis que eu armazeno as chaves APIs usadas no projeto. Estas variáveis, caso você exponha publicamente os serviços, não devem conter valores no arquivo, pois alguém pode tomar controle do seu ambiente.
 
@@ -271,9 +273,9 @@ Após isso você consegue testar se as varíaveis foram armazenadas corretamente
 
 A saída deve ser a chave de API que o Jellyfin configurou.
 
-5. Para que as informações das chaves sejam carregadas, emita os comandos de docker compose novamente.
+6. Para que as informações das chaves sejam carregadas, emita o comando de docker compose novamente.
 
-6. Após isso entra a parte de configurações individuais dos serviços. Há vários guias de como fazer isso no youtube e na internet, portanto, não serei redundante.
+7. Após isso entra a parte de configurações individuais dos serviços. Há vários guias de como fazer isso no youtube e na internet, portanto, não serei redundante.
 
 
 Se tiver alguma dúvida ou precisar de ajuda, sinta-se à vontade para abrir uma issue no GitHub.
